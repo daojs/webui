@@ -48,6 +48,10 @@ export default function App() {
             path="/registry/:componentName"
             component={RegistryHoC}
           />
+          <Route
+            path="/registry"
+            component={RegistryHoC}
+          />
         </div>
       </div>
     </HashRouter>

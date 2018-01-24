@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Form, Button, Input } from 'antd';
+import { Form, Button, Input, Select } from 'antd';
 import _ from 'lodash';
 import InputUrlContent from './inputUrlContent';
 
+const { Option } = Select;
 class Registry extends Component {
   constructor(props) {
     super(props);
+    console.log(`the props in registry is: ${JSON.stringify(props)}`);  //eslint-disable-line
     this.state = {
       name: '',
       type: 'js',
@@ -28,6 +30,7 @@ class Registry extends Component {
 
   render() {
     const { dependencies } = this.state;
+    const { types = ['js', 'es2015'] } = this.props;
     const addDeps = (
       <Form.Item>
         <Button
@@ -65,14 +68,16 @@ class Registry extends Component {
         </Form>
         <Form layout="inline">
           <Form.Item label="Type">
-            <Input
+            <Select
               value={this.state.type}
-              onChange={(e) => {
+              onChange={(type) => {
                 this.setState({
-                  type: e.target.value,
+                  type,
                 });
               }}
-            />
+            >
+              {_.map(types, type => (<Option value={type} key={type}>{type}</Option>))}
+            </Select>
           </Form.Item>
         </Form>
         <Form layout="inline">
