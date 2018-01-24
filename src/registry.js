@@ -52,7 +52,7 @@ class Registry extends Component {
         { dependencies.length > 0 ? null : addDeps }
         {
           _.map(dependencies, ({ variable, name }, index) => (
-            <Form layout="inline" key={name}>
+            <Form layout="inline" key={index}>
               <Form.Item>
                 <Button
                   type="danger"
