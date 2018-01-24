@@ -1,1 +1,1 @@
-export const SERVICE_URL = 'http://daojs.koreasouth.cloudapp.azure.com';
+export const SERVICE_URL = 'http://localhost:3000';

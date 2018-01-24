@@ -1,14 +1,28 @@
 import React, { Component } from 'react';
 import { Form, Button, Input } from 'antd';
 import _ from 'lodash';
+import InputUrlContent from './inputUrlContent';
 
 class Registry extends Component {
   constructor(props) {
     super(props);
     this.state = {
       name: '',
+      type: 'js',
+      description: '',
       dependencies: [],
-      source: '',
+      source: {
+        isUrl: false,
+        content: '',
+      },
+      sourceDebug: {
+        isUrl: false,
+        content: '',
+      },
+      readme: {
+        isUrl: false,
+        content: '',
+      },
     };
   }
 
@@ -21,7 +35,7 @@ class Registry extends Component {
           icon="plus"
           shape="circle"
           onClick={() => {
-            this.setState(_.defaults({
+            this.setState({
               dependencies: this.state.dependencies.concat([
                 {
                   variable: '',
@@ -29,7 +43,7 @@ class Registry extends Component {
                   version: [],
                 },
               ]),
-            }, this.state));
+            });
           }}
         />
       </Form.Item>
@@ -42,14 +56,43 @@ class Registry extends Component {
             <Input
               value={this.state.name}
               onChange={(e) => {
-                this.setState(_.defaults({
+                this.setState({
                   name: e.target.value,
-                }, this.state));
+                });
               }}
             />
           </Form.Item>
         </Form>
-        { dependencies.length > 0 ? null : addDeps }
+        <Form layout="inline">
+          <Form.Item label="Type">
+            <Input
+              value={this.state.type}
+              onChange={(e) => {
+                this.setState({
+                  type: e.target.value,
+                });
+              }}
+            />
+          </Form.Item>
+        </Form>
+        <Form layout="inline">
+          <Form.Item label="Description">
+            <Input.TextArea
+              rows="2"
+              value={this.state.description}
+              onChange={(e) => {
+                this.setState({
+                  description: e.target.value,
+                });
+              }}
+            />
+          </Form.Item>
+        </Form>
+        <Form layout="inline">
+          <Form.Item label="Dependencies">
+            { dependencies.length > 0 ? null : addDeps }
+          </Form.Item>
+        </Form>
         {
           _.map(dependencies, ({ variable, name }, index) => (
             <Form layout="inline" key={index}>
@@ -59,9 +102,9 @@ class Registry extends Component {
                   icon="close"
                   shape="circle"
                   onClick={() => {
-                    this.setState(_.defaults({
+                    this.setState({
                       dependencies: _.reject(dependencies, (d, idx) => idx === index),
-                    }, this.state));
+                    });
                   }}
                 />
               </Form.Item>
@@ -69,11 +112,11 @@ class Registry extends Component {
                 <Input
                   value={variable}
                   onChange={(e) => {
-                    this.setState(_.defaults({
+                    this.setState({
                       dependencies: _.map(dependencies, (d, idx) => (
                         idx === index ? _.defaults({ variable: e.target.value }, d) : d
                       )),
-                    }, this.state));
+                    });
                   }}
                 />
               </Form.Item>
@@ -81,13 +124,13 @@ class Registry extends Component {
                 <Input
                   value={name}
                   onChange={(e) => {
-                    this.setState(_.defaults({
+                    this.setState({
                       dependencies: _.map(dependencies, (d, idx) => (
                         idx === index ? _.defaults({
                           name: e.target.value,
                           }, d) : d
                       )),
-                    }, this.state));
+                    });
                   }}
                 />
               </Form.Item>
@@ -96,13 +139,38 @@ class Registry extends Component {
             ))
         }
         <Form layout="vertical">
-          <Form.Item label="Source">
-            <Input.TextArea
-              value={this.state.source}
-              onChange={(e) => {
-                this.setState(_.defaults({
-                  source: e.target.value,
-                }, this.state));
+          <Form.Item>
+            <InputUrlContent
+              label="Source"
+              {...this.state.source}
+              onChange={(newSource) => {
+                this.setState({
+                  source: newSource,
+                });
+              }}
+              rows="15"
+            />
+          </Form.Item>
+          <Form.Item>
+            <InputUrlContent
+              {...this.state.sourceDebug}
+              label="Source Debug"
+              onChange={(value) => {
+                this.setState({
+                  sourceDebug: value,
+                });
+              }}
+              rows="15"
+            />
+          </Form.Item>
+          <Form.Item>
+            <InputUrlContent
+              label="ReadMe"
+              {...this.state.readme}
+              onChange={(value) => {
+                this.setState({
+                  readme: value,
+                });
               }}
               rows="15"
             />
@@ -116,7 +184,7 @@ class Registry extends Component {
                   this.props.onSubmit({
                     name,
                     source,
-                    dependencies: _.reduce(deps, (memo, { variable, entry }) => (
+                    dependencies: _.reduce(deps, (memo, { variable, name: entry }) => (
                       variable && entry ? _.assign(memo, {
                         [entry]: variable,
                       }) : memo

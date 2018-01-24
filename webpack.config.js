@@ -5,11 +5,12 @@ module.exports = {
     './src/index.js',
   ],
   output: {
+    path: `${__dirname}/dist`,
     filename: './dist/bundle.js',
   },
   devServer: {
     contentBase: './',
-    port: 8000,
+    port: 8080,
   },
   module: {
     rules: [

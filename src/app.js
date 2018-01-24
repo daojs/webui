@@ -1,6 +1,7 @@
 import React from 'react';
-
+import { HashRouter, Route } from 'react-router-dom';
 import Registry from './registry';
+import Home from './home';
 import { createComponent } from './repository';
 
 function submit({ name, source, dependencies }) {
@@ -14,24 +15,41 @@ function submit({ name, source, dependencies }) {
   });
 }
 
+function RegistryHoC(props) {
+  return (
+    <Registry onSubmit={options => submit(options)} {...props} />
+  );
+}
+
+function HomeHoC() {
+  return (
+    <Home registryLink="/registry" />
+  );
+}
+
 export default function App() {
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        position: 'fixed',
-        height: '100%',
-        width: '50%',
-      }}
-    >
+    <HashRouter>
       <div
-        style={{ flexBasis: 0, flexGrow: 1 }}
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          position: 'fixed',
+          height: '100%',
+          width: '100%',
+          marginTop: '20px',
+        }}
       >
-        <Registry
-          onSubmit={options => submit(options)}
-        />
+        <div
+          style={{ flexBasis: 0, flexGrow: 1 }}
+        >
+          <Route exact path="/" component={HomeHoC} />
+          <Route
+            path="/registry/:componentName"
+            component={RegistryHoC}
+          />
+        </div>
       </div>
-    </div>
+    </HashRouter>
   );
 }
