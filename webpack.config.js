@@ -5,7 +5,6 @@ module.exports = {
     './src/index.js',
   ],
   output: {
-    path: `${__dirname}/dist`,
     filename: './dist/bundle.js',
   },
   devServer: {
