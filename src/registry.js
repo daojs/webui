@@ -8,7 +8,7 @@ class Registry extends Component {
     this.state = {
       name: '',
       dependencies: [],
-      content: '',
+      source: '',
     };
   }
 
@@ -96,12 +96,12 @@ class Registry extends Component {
             ))
         }
         <Form layout="vertical">
-          <Form.Item label="Content">
+          <Form.Item label="Source">
             <Input.TextArea
-              value={this.state.content}
+              value={this.state.source}
               onChange={(e) => {
                 this.setState(_.defaults({
-                  content: e.target.value,
+                  source: e.target.value,
                 }, this.state));
               }}
               rows="15"
@@ -111,11 +111,11 @@ class Registry extends Component {
             <Button
               type="primary"
               onClick={() => {
-                const { name, content, dependencies: deps } = this.state;
-                if (name && content && _.isFunction(this.props.onSubmit)) {
+                const { name, source, dependencies: deps } = this.state;
+                if (name && source && _.isFunction(this.props.onSubmit)) {
                   this.props.onSubmit({
                     name,
-                    content,
+                    source,
                     dependencies: _.reduce(deps, (memo, { variable, entry }) => (
                       variable && entry ? _.assign(memo, {
                         [entry]: variable,
