@@ -57,6 +57,7 @@ export default class extends Component {
     if (!isUrl) {
       inputControl = (<Editor
         hasPreview={this.props.hasPreview}
+        language={this.props.language}
         onChange={newValue => this.onContentChange(newValue)}
       />);
     }

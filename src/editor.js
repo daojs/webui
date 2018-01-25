@@ -64,7 +64,7 @@ export default class Editor extends Component {
         <MonacoEditor
           width={width}
           height={height}
-          language="markdown"
+          language={this.props.language}
           theme="vs"
           value={this.state.text}
           options={{
