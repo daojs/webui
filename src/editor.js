@@ -6,8 +6,8 @@ import showdown from 'showdown';
 
 const converter = new showdown.Converter();
 
-const width = 800;
-const height = 600;
+const width = '100%';
+const height = '600';
 
 const tabs = {
   edit: 'edit',
@@ -76,7 +76,7 @@ export default class Editor extends Component {
       content = (
         <div
           style={{
-            width: `${width}px`,
+            width,
             height: `${height}px`,
             overflow: 'auto',
           }}
