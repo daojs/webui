@@ -3,17 +3,6 @@ import _ from 'lodash';
 import Registry from './registry';
 import { createComponent } from './repository';
 
-function submit({ name, source, dependencies }) {
-  return createComponent({
-    name,
-    source,
-    metadata: {
-      loader: 'babel',
-      dependencies,
-    },
-  });
-}
-
 export default class RegistryHoC extends Component {
   constructor(props) {
     super(props);
@@ -32,7 +21,7 @@ export default class RegistryHoC extends Component {
 
   render() {
     return (
-      <Registry onSubmit={options => submit(options)} {...this.state} />
+      <Registry onSubmit={createComponent} {...this.state} />
     );
   }
 }

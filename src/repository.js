@@ -1,10 +1,12 @@
 import axios from 'axios';
+import _ from 'lodash';
 import { SERVICE_URL } from './constants';
 
-export function createComponent({ name, source, metadata }) {
+export function createComponent(options) {
+  const { name } = options;
   const url = `${SERVICE_URL}/resources/${name}`;
   return axios
-    .post(url, { source, metadata }, {
+    .post(url, _.omit(options, 'name'), {
       headers: { 'Content-Type': 'application/json' },
     });
 }

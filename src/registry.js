@@ -14,15 +14,15 @@ class Registry extends Component {
       dependencies = [],
       source = {
         isUrl: false,
-        content: '',
+        data: '',
       },
       sourceDebug = {
         isUrl: false,
-        content: '',
+        data: '',
       },
       readme = {
         isUrl: false,
-        content: '',
+        data: '',
       },
     } = props;
     this.state = {
@@ -155,10 +155,14 @@ class Registry extends Component {
           <Form.Item>
             <InputUrlContent
               label="Source"
-              {...this.state.source}
-              onChange={(newSource) => {
+              isUrl={this.state.source.isUrl}
+              content={this.state.source.data}
+              onChange={(value) => {
                 this.setState({
-                  source: newSource,
+                  source: {
+                    isUrl: value.isUrl,
+                    data: value.content,
+                  },
                 });
               }}
               rows="15"
@@ -166,11 +170,15 @@ class Registry extends Component {
           </Form.Item>
           <Form.Item>
             <InputUrlContent
-              {...this.state.sourceDebug}
+              isUrl={this.state.sourceDebug.isUrl}
+              content={this.state.sourceDebug.data}
               label="Source Debug"
               onChange={(value) => {
                 this.setState({
-                  sourceDebug: value,
+                  sourceDebug: {
+                    isUrl: value.isUrl,
+                    data: value.content,
+                  },
                 });
               }}
               rows="15"
@@ -179,10 +187,12 @@ class Registry extends Component {
           <Form.Item>
             <InputUrlContent
               label="ReadMe"
-              {...this.state.readme}
+              isUrl={this.state.source.isUrl}
+              content={this.state.source.data}
               onChange={(value) => {
                 this.setState({
-                  readme: value,
+                  isUrl: value.isUrl,
+                  data: value.content,
                 });
               }}
               rows="15"
@@ -192,16 +202,17 @@ class Registry extends Component {
             <Button
               type="primary"
               onClick={() => {
-                const { name, source, dependencies: deps } = this.state;
-                if (name && source && _.isFunction(this.props.onSubmit)) {
+                if (_.isFunction(this.props.onSubmit)) {
                   this.props.onSubmit({
-                    name,
-                    source,
-                    dependencies: _.reduce(deps, (memo, { variable, name: entry }) => (
-                      variable && entry ? _.assign(memo, {
-                        [entry]: variable,
-                      }) : memo
-                    ), {}),
+                    ...this.state,
+                    dependencies: _.reduce(
+                      this.state.dependencies,
+                      (memo, { variable, name: entry }) => (
+                        variable && entry ? _.assign(memo, {
+                          [entry]: variable,
+                        }) : memo
+                      ), {},
+                    ),
                   });
                 }
               }}
