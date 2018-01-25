@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { Input, Button } from 'antd';
+import { Button } from 'antd';
 import { Link } from 'react-router-dom';
 import { getComponents } from './repository';
 import ComponentList from './componentList';
-
-const { Search } = Input;
+import ComponentSearch from './componentSearchHoC';
 
 export default class Home extends Component {
   constructor(props) {
@@ -31,10 +30,9 @@ export default class Home extends Component {
         alignItems: 'center',
       }}
       >
-        <Search
+        <ComponentSearch
           placeholder="search component"
           onSearch={this.search}
-          enterButton
           style={{
             width: '30%',
             minWidth: '400px',

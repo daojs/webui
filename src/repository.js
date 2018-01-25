@@ -11,8 +11,14 @@ export function createComponent(options) {
     });
 }
 
-export function getComponents({ path }) {
-  const url = `${SERVICE_URL}/resources/${path}`;
+export function getComponents({ query }) { // TODO: will support real query
+  const url = `${SERVICE_URL}/resources/${query}`;
+  return axios
+    .get(url);
+}
+
+export function fetchSuggestion({ query }) {
+  const url = `${SERVICE_URL}/resources/${query}`;
   return axios
     .get(url);
 }
