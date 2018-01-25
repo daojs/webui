@@ -1,8 +1,7 @@
-/* eslint-disable */
 import React, { Component } from 'react';
 import { Form, Input, Radio } from 'antd';
-import Editor from './editor';
 import _ from 'lodash';
+import Editor from './editor';
 
 export default class extends Component {
   constructor(props) {
@@ -52,13 +51,13 @@ export default class extends Component {
 
     let inputControl = (<Input
       value={this.state.content}
-      onChange={(e) => this.onContentChange(e.target.value)}
+      onChange={e => this.onContentChange(e.target.value)}
     />);
 
     if (!isUrl) {
       inputControl = (<Editor
         hasPreview={this.props.hasPreview}
-        onChange={(newValue) => this.onContentChange(newValue)}
+        onChange={newValue => this.onContentChange(newValue)}
       />);
     }
 

@@ -1,6 +1,5 @@
-/* eslint-disable */
 import React, { Component } from 'react';
-import MonacoEditor from 'react-monaco-editor';
+import MonacoEditor from 'react-monaco-editor'; // eslint-disable-line
 import { Menu } from 'antd';
 import PropTypes from 'prop-types';
 import showdown from 'showdown';
@@ -31,18 +30,18 @@ export default class Editor extends Component {
   }
 
   onChangeText(newValue) {
-    this.setState({ text: newValue});
+    this.setState({ text: newValue });
     this.props.onChange(newValue);
   }
 
   createMarkup() {
-    return {__html: converter.makeHtml(this.state.text)};
+    return { __html: converter.makeHtml(this.state.text) };
   }
 
   render() {
     let menu = null;
     if (this.props.hasPreview) {
-      menu =
+      menu = (
         <Menu
           mode="horizontal"
           defaultSelectedKeys={[tabs.edit]}
@@ -55,11 +54,12 @@ export default class Editor extends Component {
             Preview
           </Menu.Item>
         </Menu>
+      );
     }
 
     let content = null;
     if (!this.props.hasPreview || this.state.activeTab === tabs.edit) {
-      content =
+      content = (
         <MonacoEditor
           width={width}
           height={height}
@@ -71,8 +71,9 @@ export default class Editor extends Component {
           }}
           onChange={this.onChangeText}
         />
+      );
     } else {
-      content = 
+      content = (
         <div
           style={{
             width: `${width}px`,
@@ -80,8 +81,8 @@ export default class Editor extends Component {
             overflow: 'auto',
           }}
           dangerouslySetInnerHTML={this.createMarkup()}
-        >
-        </div>
+        />
+      );
     }
     return (
       <div>
@@ -100,4 +101,4 @@ export default class Editor extends Component {
 
 Editor.propTypes = {
   onChange: PropTypes.func.isRequired,
-}
+};
