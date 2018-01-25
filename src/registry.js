@@ -171,6 +171,7 @@ class Registry extends Component {
           <Form.Item>
             <InputUrlContent
               label="ReadMe"
+              hasPreview
               {...this.state.readme}
               onChange={(value) => {
                 this.setState({

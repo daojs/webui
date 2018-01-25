@@ -38,6 +38,7 @@ export default function App() {
           height: '100%',
           width: '100%',
           marginTop: '20px',
+          overflow: 'auto',
         }}
       >
         <div
@@ -49,6 +50,7 @@ export default function App() {
             component={RegistryHoC}
           />
           <Route
+            exact
             path="/registry"
             component={RegistryHoC}
           />
