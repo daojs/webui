@@ -7,24 +7,32 @@ const { Option } = Select;
 class Registry extends Component {
   constructor(props) {
     super(props);
-    console.log(`the props in registry is: ${JSON.stringify(props)}`);  //eslint-disable-line
+    const {
+      name = '',
+      type = 'js',
+      description = '',
+      dependencies = [],
+      source = {
+        isUrl: false,
+        content: '',
+      },
+      sourceDebug = {
+        isUrl: false,
+        content: '',
+      },
+      readme = {
+        isUrl: false,
+        content: '',
+      },
+    } = props;
     this.state = {
-      name: '',
-      type: 'js',
-      description: '',
-      dependencies: [],
-      source: {
-        isUrl: false,
-        content: '',
-      },
-      sourceDebug: {
-        isUrl: false,
-        content: '',
-      },
-      readme: {
-        isUrl: false,
-        content: '',
-      },
+      name,
+      type,
+      description,
+      dependencies,
+      source,
+      sourceDebug,
+      readme,
     };
   }
 
