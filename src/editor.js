@@ -68,7 +68,9 @@ export default class Editor extends Component {
           theme="vs"
           value={this.state.text}
           options={{
-            selectOnLineNumbers: true,
+            minimap: {
+              enabled: false,
+            },
           }}
           onChange={this.onChangeText}
         />
