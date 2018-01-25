@@ -7,24 +7,32 @@ const { Option } = Select;
 class Registry extends Component {
   constructor(props) {
     super(props);
-    console.log(`the props in registry is: ${JSON.stringify(props)}`);  //eslint-disable-line
+    const {
+      name = '',
+      type = 'js',
+      description = '',
+      dependencies = [],
+      source = {
+        isUrl: false,
+        data: '',
+      },
+      sourceDebug = {
+        isUrl: false,
+        data: '',
+      },
+      readme = {
+        isUrl: false,
+        data: '',
+      },
+    } = props;
     this.state = {
-      name: '',
-      type: 'js',
-      description: '',
-      dependencies: [],
-      source: {
-        isUrl: false,
-        content: '',
-      },
-      sourceDebug: {
-        isUrl: false,
-        content: '',
-      },
-      readme: {
-        isUrl: false,
-        content: '',
-      },
+      name,
+      type,
+      description,
+      dependencies,
+      source,
+      sourceDebug,
+      readme,
     };
   }
 
@@ -148,10 +156,14 @@ class Registry extends Component {
             <InputUrlContent
               label="Source"
               language="javascript"
-              {...this.state.source}
-              onChange={(newSource) => {
+              isUrl={this.state.source.isUrl}
+              content={this.state.source.data}
+              onChange={(value) => {
                 this.setState({
-                  source: newSource,
+                  source: {
+                    isUrl: value.isUrl,
+                    data: value.content,
+                  },
                 });
               }}
               rows="15"
@@ -159,12 +171,16 @@ class Registry extends Component {
           </Form.Item>
           <Form.Item>
             <InputUrlContent
-              {...this.state.sourceDebug}
+              isUrl={this.state.sourceDebug.isUrl}
+              content={this.state.sourceDebug.data}
               label="Source Debug"
               language="javascript"
               onChange={(value) => {
                 this.setState({
-                  sourceDebug: value,
+                  sourceDebug: {
+                    isUrl: value.isUrl,
+                    data: value.content,
+                  },
                 });
               }}
               rows="15"
@@ -175,10 +191,12 @@ class Registry extends Component {
               label="ReadMe"
               hasPreview
               language="markdown"
-              {...this.state.readme}
+              isUrl={this.state.source.isUrl}
+              content={this.state.source.data}
               onChange={(value) => {
                 this.setState({
-                  readme: value,
+                  isUrl: value.isUrl,
+                  data: value.content,
                 });
               }}
               rows="15"
@@ -188,16 +206,17 @@ class Registry extends Component {
             <Button
               type="primary"
               onClick={() => {
-                const { name, source, dependencies: deps } = this.state;
-                if (name && source && _.isFunction(this.props.onSubmit)) {
+                if (_.isFunction(this.props.onSubmit)) {
                   this.props.onSubmit({
-                    name,
-                    source,
-                    dependencies: _.reduce(deps, (memo, { variable, name: entry }) => (
-                      variable && entry ? _.assign(memo, {
-                        [entry]: variable,
-                      }) : memo
-                    ), {}),
+                    ...this.state,
+                    dependencies: _.reduce(
+                      this.state.dependencies,
+                      (memo, { variable, name: entry }) => (
+                        variable && entry ? _.assign(memo, {
+                          [entry]: variable,
+                        }) : memo
+                      ), {},
+                    ),
                   });
                 }
               }}

@@ -1,25 +1,7 @@
 import React from 'react';
 import { HashRouter, Route } from 'react-router-dom';
-import Registry from './registry';
+import RegistryHoC from './registryHoC';
 import Home from './home';
-import { createComponent } from './repository';
-
-function submit({ name, source, dependencies }) {
-  return createComponent({
-    name,
-    source,
-    metadata: {
-      loader: 'babel',
-      dependencies,
-    },
-  });
-}
-
-function RegistryHoC(props) {
-  return (
-    <Registry onSubmit={options => submit(options)} {...props} />
-  );
-}
 
 function HomeHoC() {
   return (
@@ -46,12 +28,7 @@ export default function App() {
         >
           <Route exact path="/" component={HomeHoC} />
           <Route
-            path="/registry/:componentName"
-            component={RegistryHoC}
-          />
-          <Route
-            exact
-            path="/registry"
+            path="/registry/:componentName*"
             component={RegistryHoC}
           />
         </div>
