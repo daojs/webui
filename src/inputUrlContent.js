@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Input, Radio } from 'antd';
 import _ from 'lodash';
+import Editor from './editor';
 
 export default class extends Component {
   constructor(props) {
@@ -35,13 +36,13 @@ export default class extends Component {
     });
   }
 
-  onContentChange(e) {
+  onContentChange(content) {
     this.onChange({
       ...this.state,
-      content: e.target.value,
+      content,
     });
     this.setState({
-      content: e.target.value,
+      content,
     });
   }
 
@@ -50,20 +51,15 @@ export default class extends Component {
 
     let inputControl = (<Input
       value={this.state.content}
-      onChange={this.onContentChange}
+      onChange={e => this.onContentChange(e.target.value)}
     />);
 
     if (!isUrl) {
-      inputControl = (
-        <Input.TextArea
-          value={this.state.source}
-          onChange={(e) => {
-            this.setState(_.defaults({
-              source: e.target.value,
-            }, this.state));
-          }}
-          rows="15"
-        />);
+      inputControl = (<Editor
+        hasPreview={this.props.hasPreview}
+        language={this.props.language}
+        onChange={newValue => this.onContentChange(newValue)}
+      />);
     }
 
     return (

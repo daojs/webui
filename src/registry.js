@@ -155,6 +155,7 @@ class Registry extends Component {
           <Form.Item>
             <InputUrlContent
               label="Source"
+              language="javascript"
               isUrl={this.state.source.isUrl}
               content={this.state.source.data}
               onChange={(value) => {
@@ -173,6 +174,7 @@ class Registry extends Component {
               isUrl={this.state.sourceDebug.isUrl}
               content={this.state.sourceDebug.data}
               label="Source Debug"
+              language="javascript"
               onChange={(value) => {
                 this.setState({
                   sourceDebug: {
@@ -187,6 +189,8 @@ class Registry extends Component {
           <Form.Item>
             <InputUrlContent
               label="ReadMe"
+              hasPreview
+              language="markdown"
               isUrl={this.state.source.isUrl}
               content={this.state.source.data}
               onChange={(value) => {
