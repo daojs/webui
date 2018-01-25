@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import showdown from 'showdown';
 
 const converter = new showdown.Converter();
+converter.setFlavor('github');
 
 const width = '100%';
 const height = '600';
@@ -80,7 +81,7 @@ export default class Editor extends Component {
             height: `${height}px`,
             overflow: 'auto',
           }}
-          dangerouslySetInnerHTML={this.createMarkup()}
+          dangerouslySetInnerHTML={this.createMarkup()} // eslint-disable-line
         />
       );
     }
