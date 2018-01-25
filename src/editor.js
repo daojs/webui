@@ -71,6 +71,7 @@ export default class Editor extends Component {
             minimap: {
               enabled: false,
             },
+            automaticLayout: true,
           }}
           onChange={this.onChangeText}
         />

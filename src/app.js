@@ -42,7 +42,7 @@ export default function App() {
         }}
       >
         <div
-          style={{ flexBasis: 0, flexGrow: 1 }}
+          style={{ flexBasis: 0, flexGrow: 1, width: '100%' }}
         >
           <Route exact path="/" component={HomeHoC} />
           <Route
