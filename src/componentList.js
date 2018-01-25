@@ -1,16 +1,18 @@
-import React, { Component } from 'react';
-import ComponentItem from './componentItem';
+import React from 'react';
+import { Form } from 'antd';
+import ComponentItem from './componentItemHoC';
 
-export default class extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  render() {
-    return (
-      <div>
-        {this.props.components.map(component => (<ComponentItem {...component} />))}
-      </div>);
-  }
+export default function (props) {
+  const { items = [] } = props;
+  return (
+    <Form
+      layout="vertical"
+      style={{
+        marginTop: '50px',
+        width: '50%',
+      }}
+    >
+      {items.map(item => (<Form.Item key={item}><ComponentItem item={item} /></Form.Item>))}
+    </Form>
+  );
 }

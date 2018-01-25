@@ -53,6 +53,7 @@ export default class extends Component {
         filterOption={filterOption}
         onChange={this.onChange}
         placeholder={placeholder}
+        defaultActiveFirstOption={false}
         style={style}
       >
         <Search

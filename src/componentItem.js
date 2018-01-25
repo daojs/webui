@@ -1,17 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { Card } from 'antd';
 
-export default class extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  render() {
-    return (
-      <div>
-        <section className="markdown">
-          <h2>{this.props.name || 'placeholder Name'}</h2>
-        </section>
-      </div>);
-  }
+export default function (props) {
+  const { name, description } = props;
+  return (
+    <Card title={name}>
+      <p>{description}</p>
+    </Card>);
 }
