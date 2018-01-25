@@ -1,3 +1,5 @@
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
 module.exports = {
   devtool: 'source-map',
   entry: [
@@ -19,4 +21,12 @@ module.exports = {
       { test: /\.css/, loader: ['style-loader', 'css-loader'] },
     ],
   },
+  plugins: [
+    new CopyWebpackPlugin([
+      {
+        from: 'node_modules/monaco-editor/min/vs',
+        to: 'vs',
+      },
+    ]),
+  ],
 };
