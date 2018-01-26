@@ -28,3 +28,21 @@ export function getComponentMetadata({ name, version = 'latest' }) {
   return axios
     .get(url);
 }
+
+export function getComponentSource({ name, version = 'latest' }) {
+  const url = `${SERVICE_URL}/resources/${name}@${version}/source.json`;
+  return axios
+    .get(url);
+}
+
+export function getComponentSourceDebug({ name, version = 'latest' }) {
+  const url = `${SERVICE_URL}/resources/${name}@${version}/source.debug.json`;
+  return axios
+    .get(url);
+}
+
+export function getComponentReadme({ name, version = 'latest' }) {
+  const url = `${SERVICE_URL}/resources/${name}@${version}/README.md`;
+  return axios
+    .get(url);
+}
