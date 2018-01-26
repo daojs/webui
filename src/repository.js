@@ -26,7 +26,12 @@ export function fetchSuggestion({ query }) {
 export function getComponentMetadata({ name, version = 'latest' }) {
   const url = `${SERVICE_URL}/resources/${name}@${version}`;
   return axios
-    .get(url);
+    .get(url)
+    .then(response => _.defaults({
+      data: _.defaults(response.data, {
+        version,
+      }),
+    }, response));
 }
 
 export function getComponentSource({ name, version = 'latest' }) {
