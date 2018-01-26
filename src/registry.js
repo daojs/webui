@@ -93,6 +93,9 @@ class Registry extends Component {
           <Form.Item label="Description">
             <Input.TextArea
               rows="2"
+              style={{
+                width: '400px',
+              }}
               value={this.state.description}
               onChange={(e) => {
                 this.setState({
