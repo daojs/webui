@@ -5,36 +5,45 @@ import InputUrlContent from './inputUrlContent';
 import ComponentSearch from './componentSearchHoC';
 
 const { Option } = Select;
+
+function props2State(props) {
+  const {
+    name = '',
+    type = 'js',
+    description = '',
+    dependencies = [],
+    source = {
+      isUrl: false,
+      data: '',
+    },
+    sourceDebug = {
+      isUrl: false,
+      data: '',
+    },
+    readme = {
+      isUrl: false,
+      data: '',
+    },
+  } = props;
+  return {
+    name,
+    type,
+    description,
+    dependencies,
+    source,
+    sourceDebug,
+    readme,
+  };
+}
+
 class Registry extends Component {
   constructor(props) {
     super(props);
-    const {
-      name = '',
-      type = 'js',
-      description = '',
-      dependencies = [],
-      source = {
-        isUrl: false,
-        data: '',
-      },
-      sourceDebug = {
-        isUrl: false,
-        data: '',
-      },
-      readme = {
-        isUrl: false,
-        data: '',
-      },
-    } = props;
-    this.state = {
-      name,
-      type,
-      description,
-      dependencies,
-      source,
-      sourceDebug,
-      readme,
-    };
+    this.state = props2State(props);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState(props2State(nextProps));
   }
 
   render() {
@@ -162,6 +171,7 @@ class Registry extends Component {
               language="javascript"
               isUrl={this.state.source.isUrl}
               content={this.state.source.data}
+              placeholder="//Input javascript code here"
               onChange={(value) => {
                 this.setState({
                   source: {
@@ -179,6 +189,7 @@ class Registry extends Component {
               content={this.state.sourceDebug.data}
               label="Source Debug"
               language="javascript"
+              placeholder="//Input javascript code here"
               onChange={(value) => {
                 this.setState({
                   sourceDebug: {
@@ -195,12 +206,15 @@ class Registry extends Component {
               label="ReadMe"
               hasPreview
               language="markdown"
-              isUrl={this.state.source.isUrl}
-              content={this.state.source.data}
+              isUrl={this.state.readme.isUrl}
+              content={this.state.readme.data}
+              placeholder="//Input markdown code"
               onChange={(value) => {
                 this.setState({
-                  isUrl: value.isUrl,
-                  data: value.content,
+                  readme: {
+                    isUrl: value.isUrl,
+                    data: value.content,
+                  },
                 });
               }}
               rows="15"
