@@ -55,8 +55,10 @@ export default class extends Component {
         placeholder={placeholder}
         defaultActiveFirstOption={false}
         style={style}
+        backfill={true} //eslint-disable-line
       >
         <Search
+          enterButton
           onSearch={this.onSearchComponents} //eslint-disable-line
         />
       </AutoComplete>

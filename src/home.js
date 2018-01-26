@@ -17,7 +17,7 @@ export default class Home extends Component {
     return getComponentChildren({ query })
       .then(({ data }) => {
         const { version, children = [] } = data;
-        const list = query.split('/');
+        const list = _.compact(query.split('/'));
         let items = _.map(children, (item) => {
           const tmp = list.concat(item);
           return tmp.join('/');
