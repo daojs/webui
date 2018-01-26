@@ -25,9 +25,9 @@ export default class extends Component {
   }
 
   onChange(value) {
-    const { onValueChange = _.identity } = this.props;
+    const { onChange = _.identity } = this.props;
     this.setState({ value });
-    onValueChange(value);
+    onChange(value);
     this.updateDataSource(value);
   }
 
@@ -46,6 +46,14 @@ export default class extends Component {
 
   render() {
     const { placeholder, style } = this.props;
+    let inputType = null; // default is input
+    if (_.isFunction(this.props.onSearchComponents)) {
+      inputType = (
+        <Search
+          enterButton
+          onSearch={this.onSearchComponents} //eslint-disable-line
+        />);
+    }
     return (
       <AutoComplete
         dataSource={this.state.dataSource}
@@ -57,10 +65,7 @@ export default class extends Component {
         style={style}
         backfill={true} //eslint-disable-line
       >
-        <Search
-          enterButton
-          onSearch={this.onSearchComponents} //eslint-disable-line
-        />
+        {inputType}
       </AutoComplete>
     );
   }

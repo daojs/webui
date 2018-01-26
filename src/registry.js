@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Form, Button, Input, Select } from 'antd';
 import _ from 'lodash';
 import InputUrlContent from './inputUrlContent';
+import ComponentSearch from './componentSearchHoC';
 
 const { Option } = Select;
 class Registry extends Component {
@@ -134,13 +135,13 @@ class Registry extends Component {
                 />
               </Form.Item>
               <Form.Item label="from">
-                <Input
+                <ComponentSearch
                   value={name}
-                  onChange={(e) => {
+                  onChange={(value) => {
                     this.setState({
                       dependencies: _.map(dependencies, (d, idx) => (
                         idx === index ? _.defaults({
-                          name: e.target.value,
+                          name: value,
                           }, d) : d
                       )),
                     });
