@@ -9,7 +9,7 @@ import ComponentSearch from './componentSearchHoC';
 export default class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = { items: [] };
+    this.state = { items: [], showResults: false };
     this.search = this.search.bind(this);
   }
 
@@ -27,6 +27,7 @@ export default class Home extends Component {
         }
         this.setState({
           items,
+          showResults: true,
         });
       });
   }
@@ -60,6 +61,7 @@ export default class Home extends Component {
         </div>
         <ComponentList
           items={this.state.items}
+          showResults={this.state.showResults}
         />
       </div>
     );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from 'antd';
+import { Divider } from 'antd';
 import { Link } from 'react-router-dom';
 
 /* eslint-disable */
@@ -26,12 +26,17 @@ function getExtra(props) {
     </div>
   )
 }
-/* eslint-enable */
 
 export default function (props) {
-  const { name, description } = props;
+  const { name, description, version = 0 } = props;
   return (
-    <Card title={name} extra={getExtra(props)}>
+    <div>
+      <h3>
+        <Link to={{ pathname: `/detail/${name}@${version}` }}>{name}</Link> { //eslint-disable-line
+        }
+      </h3>
       <p>{description}</p>
-    </Card>);
+      <Divider />
+    </div>
+  );
 }
