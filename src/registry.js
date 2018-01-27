@@ -9,7 +9,7 @@ const { Option } = Select;
 function props2State(props) {
   const {
     name = '',
-    type = 'js',
+    type = 'es2015',
     description = '',
     dependencies = [],
     source = {
