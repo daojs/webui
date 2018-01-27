@@ -1,12 +1,10 @@
-import React from 'react';
-import { Row, Col, Table } from 'antd';
 import _ from 'lodash';
-import showdown from 'showdown';
+import React from 'react';
+import { Row, Col, Table, Card, Form } from 'antd';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { vs } from 'react-syntax-highlighter/styles/hljs';
+import ReactMarkdown from 'react-markdown';
 
-const converter = new showdown.Converter();
-converter.setFlavor('github');
 
 export default function (props) {
   const {
@@ -17,8 +15,6 @@ export default function (props) {
     source,
     readme = '',
   } = props;
-
-  const readmeMarkup = { __html: converter.makeHtml(readme) };
 
   const dataSource = _.reduce(dependencies, (result, value, key) => result.concat({
     key,
@@ -40,27 +36,36 @@ export default function (props) {
     <div>
       <Row>
         <Col span={14} offset={2}>
-          <h1>{name}</h1>
-          <div style={{
-            padding: '10px 15px',
-            borderLeft: '4px solid #ccc',
-          }}
-          >
-            Description: {description}
-          </div>
-          <div
-            style={{
-              marginTop: '20px',
-            }}
-            dangerouslySetInnerHTML={readmeMarkup} // eslint-disable-line
-          />
-          <div
-            style={{
-              marginTop: '20px',
-            }}
-          >
-            <SyntaxHighlighter language="javascript" style={vs}>{source.data}</SyntaxHighlighter>
-          </div>
+          <Form>
+            <Form.Item>
+              <h1>{name}</h1>
+            </Form.Item>
+            <Form.Item>
+              <div style={{
+                padding: '0 15px',
+                borderLeft: '4px solid #ccc',
+              }}
+              >
+                Description: {description}
+              </div>
+            </Form.Item>
+            <Form.Item>
+              <Card
+                type="inner"
+                title="README.md"
+              >
+                <ReactMarkdown source={readme} />
+              </Card>
+            </Form.Item>
+            <Form.Item>
+              <Card
+                type="inner"
+                title="Source code"
+              >
+                <SyntaxHighlighter language="javascript" style={vs}>{source.data}</SyntaxHighlighter>
+              </Card>
+            </Form.Item>
+          </Form>
         </Col>
         <Col span={5} offset={1}>
           <h3>Version</h3>
