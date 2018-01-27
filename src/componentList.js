@@ -22,7 +22,7 @@ export default function (props) {
       }}
     >
       {results}
-      {items.map(item => (<Form.Item key={item}><ComponentItem item={item} /></Form.Item>))}
+      {items.map(item => (<ComponentItem item={item} key={item} />))}
     </Form>
   );
 }

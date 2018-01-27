@@ -18,8 +18,8 @@ export default class RegistryHoC extends Component {
 
   componentWillMount() {
     const componentName = _.get(this.props, 'match.params.componentName');
-    const [name, version] = componentName.split('@');
     if (componentName) {
+      const [name, version] = componentName.split('@');
       // TODO: use new API to fetch data
       getComponentMetadata({ name, version })
         .then(({ data }) => {

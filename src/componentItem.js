@@ -1,5 +1,5 @@
 import React from 'react';
-import { Divider } from 'antd';
+import { Divider, Icon, Button } from 'antd';
 import { Link } from 'react-router-dom';
 
 /* eslint-disable */
@@ -34,6 +34,18 @@ export default function (props) {
       <h3>
         <Link to={{ pathname: `/detail/${name}@${version}` }}>{name}</Link> { //eslint-disable-line
         }
+        <Button
+          style={{
+            border: 'none',
+          }}
+          size='small'
+        >
+          <Link
+            to={{ pathname: `/registry/${name}@${version}` }}
+          >
+            <Icon type='edit' />
+          </Link>
+        </Button>
       </h3>
       <p>{description}</p>
       <Divider />
