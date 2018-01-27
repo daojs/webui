@@ -62,7 +62,21 @@ export default function (props) {
                 type="inner"
                 title="Source code"
               >
-                <SyntaxHighlighter language="javascript" style={vs}>{source.data}</SyntaxHighlighter>
+                <SyntaxHighlighter
+                  language="javascript"
+                  style={vs}
+                  codeTagProps={{
+                    style: {
+                      display: 'block',
+                      width: '100%',
+                      wordBreak: 'break-all',
+                      wordWrap: 'break-word',
+                      whiteSpace: 'pre-wrap',
+                    },
+                  }}
+                >
+                  {source.data}
+                </SyntaxHighlighter>
               </Card>
             </Form.Item>
           </Form>
