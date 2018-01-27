@@ -48,7 +48,7 @@ class Registry extends Component {
 
   render() {
     const { dependencies } = this.state;
-    const { types = ['js', 'es2015'] } = this.props;
+    const { types = ['es2015'] } = this.props;
     const addDeps = (
       <Form.Item>
         <Button
