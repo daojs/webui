@@ -199,8 +199,10 @@ class Registry extends Component {
               content={this.state.source.data}
               onChange={(value) => {
                 this.setState({
-                  isUrl: value.isUrl,
-                  data: value.content,
+                  readme: {
+                    isUrl: value.isUrl,
+                    data: value.content,
+                  },
                 });
               }}
               rows="15"
