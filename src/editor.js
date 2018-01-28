@@ -20,10 +20,16 @@ export default class Editor extends Component {
     super(props);
     this.state = {
       activeTab: tabs.edit,
-      text: '// start your code here',
+      text: props.content,
     };
     this.onClickTab = this.onClickTab.bind(this);
     this.onChangeText = this.onChangeText.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      text: nextProps.content,
+    });
   }
 
   onClickTab(e) {

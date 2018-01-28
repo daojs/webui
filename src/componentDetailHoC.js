@@ -16,11 +16,13 @@ export default class extends Component {
       description: '',
       dependencies: {},
       source: { isUrl: false, data: '' },
+      sourceDebug: { isUrl: false, data: '' },
       readme: '',
     };
   }
 
   componentWillMount() {
+    // TODO: will update to use one new API
     getComponentMetadata({ name: this.name, version: this.version })
       .then(({ data }) => {
         this.setState({

@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import Registry from './registry';
-import { createComponent } from './repository';
+import { createComponent, getComponentMetadata, getComponentSource, getComponentReadme, getComponentSourceDebug } from './repository';
+
+function convertDependencies(dependencies) {
+  return _.chain(dependencies)
+    .toPairs()
+    .map(pair => ({ name: pair[0], variable: pair[1] }))
+    .value();
+}
 
 export default class RegistryHoC extends Component {
   constructor(props) {
@@ -12,10 +19,35 @@ export default class RegistryHoC extends Component {
   componentWillMount() {
     const componentName = _.get(this.props, 'match.params.componentName');
     if (componentName) {
-      // TODO: fetch component info to set state
-      this.setState({
-        source: { content: 'http://test.com', isUrl: true },
-      });
+      const [name, version] = componentName.split('@');
+      // TODO: use new API to fetch data
+      getComponentMetadata({ name, version })
+        .then(({ data }) => {
+          this.setState({
+            name,
+            description: data.description,
+            type: data.type,
+            dependencies: convertDependencies(data.dependencies),
+          });
+        });
+      getComponentSource({ name, version })
+        .then(({ data }) => {
+          this.setState({
+            source: data,
+          });
+        });
+      getComponentSourceDebug({ name, version })
+        .then(({ data }) => {
+          this.setState({
+            sourceDebug: data,
+          });
+        });
+      getComponentReadme({ name, version })
+        .then(({ data }) => {
+          this.setState({
+            readme: data,
+          });
+        });
     }
   }
 

@@ -5,8 +5,8 @@ import _ from 'lodash';
 const { Search } = Input;
 
 function filterOption(inputValue, { props }) {
-  const fold = _.last(inputValue.split('/'));
-  return _.startsWith(props.children, fold);
+  // const fold = _.last(inputValue.split('/'));
+  return _.startsWith(props.children, inputValue);
 }
 
 export default class extends Component {
@@ -18,6 +18,7 @@ export default class extends Component {
     };
     this.onChange = this.onChange.bind(this);
     this.onSearchComponents = this.onSearchComponents.bind(this);
+    this.onSearch = this.onSearch.bind(this);
   }
 
   componentWillMount() {
@@ -28,18 +29,24 @@ export default class extends Component {
     const { onChange = _.identity } = this.props;
     this.setState({ value });
     onChange(value);
+  }
+
+  onSearch(value) {
     this.updateDataSource(value);
   }
 
-  onSearchComponents() {
+  onSearchComponents(value) {
+    this.setState({
+      dataSource: [],
+    });
     if (_.isFunction(this.props.onSearchComponents)) {
-      this.props.onSearchComponents(this.state.value);
+      this.props.onSearchComponents(value);
     }
   }
 
   updateDataSource(value) {
     const { fetchSuggestion = _.identity } = this.props;
-    fetchSuggestion(value, (dataSource) => {
+    fetchSuggestion({ query: value, dataSource: this.state.dataSource }, (dataSource) => {
       this.setState({ dataSource });
     });
   }
@@ -51,7 +58,7 @@ export default class extends Component {
       inputType = (
         <Search
           enterButton
-          onSearch={this.onSearchComponents} //eslint-disable-line
+          onSearch={this.onSearchComponents}
         />);
     }
     return (
@@ -60,10 +67,12 @@ export default class extends Component {
         value={this.state.value}
         filterOption={filterOption}
         onChange={this.onChange}
+        onSearch={this.onSearch}
+        onSelect={this.onSelect}
         placeholder={placeholder}
         defaultActiveFirstOption={false}
         style={style}
-        backfill={true} //eslint-disable-line
+        backfill
       >
         {inputType}
       </AutoComplete>

@@ -8,11 +8,18 @@ export default class extends Component {
     super(props);
     this.state = {
       isUrl: props.isUrl ? 1 : 0,
-      content: props.content,
+      content: props.content || props.placeholder,
     };
     this.values = {};
     this.onSelectChanged = this.onSelectChanged.bind(this);
     this.onContentChange = this.onContentChange.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      isUrl: nextProps.isUrl ? 1 : 0,
+      content: nextProps.content || nextProps.placeholder,
+    });
   }
 
   onChange(newValue) {
@@ -58,6 +65,7 @@ export default class extends Component {
       inputControl = (<Editor
         hasPreview={this.props.hasPreview}
         language={this.props.language}
+        content={this.state.content}
         onChange={newValue => this.onContentChange(newValue)}
       />);
     }
