@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
-import { Row, Col, Table, Card, Form } from 'antd';
+import { Link } from 'react-router-dom';
+import { Row, Col, Table, Card, Form, Button } from 'antd';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { vs } from 'react-syntax-highlighter/styles/hljs';
 import ReactMarkdown from 'react-markdown';
@@ -19,7 +20,7 @@ export default function (props) {
   const dataSource = _.reduce(dependencies, (result, value, key) => result.concat({
     key,
     name: key,
-    version: value.version,
+    version: value.version || 'latest',
   }), []);
 
   const columns = [{
@@ -86,6 +87,17 @@ export default function (props) {
           <p>{version}</p>
           <h3>Dependencies</h3>
           <Table dataSource={dataSource} columns={columns} />
+          <Form>
+            <Form.Item>
+              <a href={`/view/${name}@${version}`} >
+                <Button icon="play-circle">See demo</Button>
+              </a>
+              <br />
+              <Link to={`/registry/${name}@${version}`} >
+                <Button icon="edit">Edit component</Button>
+              </Link>
+            </Form.Item>
+          </Form>
         </Col>
       </Row>
     </div>
