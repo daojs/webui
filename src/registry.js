@@ -71,7 +71,7 @@ class Registry extends Component {
     );
 
     return (
-      <div>
+      <div style={this.props.style}>
         <Form layout="inline">
           <Form.Item label="Name">
             <Input

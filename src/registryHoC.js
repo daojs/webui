@@ -53,7 +53,16 @@ export default class RegistryHoC extends Component {
 
   render() {
     return (
-      <Registry onSubmit={createComponent} {...this.state} />
+      <div>
+        <Registry
+          style={{
+            width: '50%',
+            padding: '20px',
+          }}
+          onSubmit={createComponent}
+          {...this.state}
+        />
+      </div>
     );
   }
 }
