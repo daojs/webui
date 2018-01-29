@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { parseModule as esprimaParsemodule } from 'esprima';
 import { Form, Button, Input, InputNumber, Select, Tabs } from 'antd';
 import _ from 'lodash';
 import CodeEditor from './codeEditor';
@@ -15,15 +16,41 @@ class Registry extends Component {
     this.source = props.source;
     this.demo = props.demo;
     this.readme = props.readme;
-    this.name = props.name || '';
+    this.name = (props.name && props.name.substr(2)) || '';
     this.description = props.description || '';
     this.types = this.props.types || ['es2015'];
     this.type = props.type || _.first(this.types);
+    this.onSourceChange = this.onSourceChange.bind(this);
+  }
+
+  onSourceChange(source) {
+    this.source = source;
+    try {
+      const dependencies = _.chain(esprimaParsemodule(source, { jsx: true }).body)
+        .filter(syntaxTreeNode => syntaxTreeNode.type === 'ImportDeclaration')
+        .map(({ source: { value: name } }) => {
+          if (!name) {
+            return null;
+          }
+          const isComponent = _.startsWith(name, '@');
+          const { version } = _.find(this.state.dependencies, { name }) || { version: isComponent ? 0 : '*' };
+          return {
+            name,
+            isComponent,
+            version,
+          };
+        })
+        .compact()
+        .value();
+      this.setState({
+        dependencies,
+      });
+    } catch (e) {} //eslint-disable-line
   }
 
   getComponentConfig() {
     return {
-      name: this.name,
+      name: `@/${this.name}`,
       source: this.source,
       demo: this.demo,
       readme: this.readme,
@@ -45,7 +72,7 @@ class Registry extends Component {
       <CodeEditor
         language="javascript"
         value={this.source}
-        onChange={(source) => { this.source = source; }}
+        onChange={this.onSourceChange}
       />);
     const readmeEditor = (
       <CodeEditor
@@ -65,6 +92,7 @@ class Registry extends Component {
         <Form layout="inline">
           <Form.Item label="Name">
             <Input
+              addonBefore="@/"
               defaultValue={this.name}
               onChange={(e) => {
                 this.name = e.target.value;
@@ -101,7 +129,7 @@ class Registry extends Component {
           <Form.Item label="Dependencies" />
         </Form>
         {
-          _.map(dependencies, ({ version, name }, index) => (
+          _.map(dependencies, ({ version, name, isComponent }, index) => (
             <Form layout="inline" key={index}>
               <Form.Item label="component">
                 <Input
@@ -110,17 +138,31 @@ class Registry extends Component {
                 />
               </Form.Item>
               <Form.Item label="minVersion">
-                <InputNumber
-                  defaultValue={version}
-                  onChange={(e) => {
-                    this.setState({
-                      dependencies: _.map(dependencies, (d, idx) => (
-                        idx === index ?
-                          _.defaults({ variable: parseInt(e.target.value, 10) }, d) : d
-                      )),
-                    });
-                  }}
-                />
+                {
+                  isComponent ? (<InputNumber
+                    defaultValue={version}
+                    onChange={(num) => {
+                      this.setState({
+                        dependencies: _.map(dependencies, (d, idx) => (
+                          idx === index ?
+                            _.defaults({ version: num }, d) : d
+                        )),
+                      });
+                    }}
+                  />) : (
+                    <Input
+                      defaultValue={version}
+                      onChange={(e) => {
+                        this.setState({
+                          dependencies: _.map(dependencies, (d, idx) => (
+                            idx === index ?
+                              _.defaults({ version: e.target.value }, d) : d
+                          )),
+                        });
+                      }}
+                    />
+                  )
+                }
               </Form.Item>
             </Form>
             ))
