@@ -14,9 +14,10 @@ export default class extends Component {
       name,
       version,
       description: '',
+      dependencies: {},
       source: { isUrl: false, data: '' },
       sourceDebug: { isUrl: false, data: '' },
-      readme: { isUrl: false, data: '' },
+      readme: '',
     };
   }
 
@@ -27,6 +28,7 @@ export default class extends Component {
         this.setState({
           description: data.description,
           version: data.version,
+          dependencies: data.dependencies,
         });
       });
     getComponentSource({ name: this.name, version: this.version })
