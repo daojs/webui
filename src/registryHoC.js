@@ -6,7 +6,7 @@ import { createComponent, getComponentMetadata, getComponentSource, getComponent
 function convertDependencies(dependencies) {
   return _.chain(dependencies)
     .toPairs()
-    .map(pair => ({ name: pair[0], variable: pair[1] }))
+    .map(pair => ({ name: pair[0], version: pair[1] }))
     .value();
 }
 
@@ -53,16 +53,14 @@ export default class RegistryHoC extends Component {
 
   render() {
     return (
-      <div>
-        <Registry
-          style={{
-            width: '50%',
-            padding: '20px',
-          }}
-          onSubmit={createComponent}
-          {...this.state}
-        />
-      </div>
+      <Registry
+        onSubmit={createComponent}
+        onPreview={this.props.onPreview}
+        {...this.state}
+        style={{
+          padding: '20px',
+        }}
+      />
     );
   }
 }

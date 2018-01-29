@@ -1,7 +1,7 @@
 import React from 'react';
 import { HashRouter, Route } from 'react-router-dom';
 import ComponentDetail from './componentDetailHoC';
-import Registry from './registryHoC';
+import RegistryStudio from './registryStudio';
 import Home from './home';
 
 function HomeHoC() {
@@ -30,7 +30,7 @@ export default function App() {
           <Route exact path="/" component={HomeHoC} />
           <Route
             path="/registry/:componentName*"
-            component={Registry}
+            component={RegistryStudio}
           />
           <Route
             path="/detail/:componentName*"

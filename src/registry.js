@@ -1,85 +1,73 @@
 import React, { Component } from 'react';
-import { Form, Button, Input, Select } from 'antd';
+import { Form, Button, Input, InputNumber, Select, Tabs } from 'antd';
 import _ from 'lodash';
-import InputUrlContent from './inputUrlContent';
-import ComponentSearch from './componentSearchHoC';
+import CodeEditor from './codeEditor';
 
 const { Option } = Select;
-
-function props2State(props) {
-  const {
-    name = '',
-    type = 'es2015',
-    description = '',
-    dependencies = [],
-    source = {
-      isUrl: false,
-      data: '',
-    },
-    sourceDebug = {
-      isUrl: false,
-      data: '',
-    },
-    readme = {
-      isUrl: false,
-      data: '',
-    },
-  } = props;
-  return {
-    name,
-    type,
-    description,
-    dependencies,
-    source,
-    sourceDebug,
-    readme,
-  };
-}
+const { TabPane } = Tabs;
 
 class Registry extends Component {
   constructor(props) {
     super(props);
-    this.state = props2State(props);
+    this.state = {
+      dependencies: props.dependencies || [],
+    };
+    this.source = props.source;
+    this.demo = props.demo;
+    this.readme = props.readme;
+    this.name = props.name || '';
+    this.description = props.description || '';
+    this.types = this.props.types || ['es2015'];
+    this.type = props.type || _.first(this.types);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState(props2State(nextProps));
+  getComponentConfig() {
+    return {
+      name: this.name,
+      source: this.source,
+      demo: this.demo,
+      readme: this.readme,
+      type: this.type,
+      dependencies: _.reduce(
+        this.state.dependencies,
+        (memo, { version, name }) => (
+          _.assign(memo, {
+            [name]: version,
+          }) : memo
+        ), {},
+      ),
+    };
   }
 
   render() {
     const { dependencies } = this.state;
-    const { types = ['es2015'] } = this.props;
-    const addDeps = (
-      <Form.Item>
-        <Button
-          type="primary"
-          icon="plus"
-          shape="circle"
-          onClick={() => {
-            this.setState({
-              dependencies: this.state.dependencies.concat([
-                {
-                  variable: '',
-                  name: '',
-                  version: [],
-                },
-              ]),
-            });
-          }}
-        />
-      </Form.Item>
-    );
+    const sourceEditor = (
+      <CodeEditor
+        language="javascript"
+        value={this.source}
+        onChange={(source) => { this.source = source; }}
+      />);
+    const readmeEditor = (
+      <CodeEditor
+        language="markdown"
+        value={this.readme}
+        onChange={(readme) => { this.readme = readme; }}
+      />);
+    const demoEditor = (
+      <CodeEditor
+        language="javascript"
+        value={this.demo}
+        onChange={(demo) => { this.demo = demo; }}
+      />);
 
     return (
       <div style={this.props.style}>
         <Form layout="inline">
           <Form.Item label="Name">
             <Input
-              value={this.state.name}
+              defaultValue={this.name}
               onChange={(e) => {
-                this.setState({
-                  name: e.target.value,
-                });
+                this.name = e.target.value;
               }}
             />
           </Form.Item>
@@ -87,14 +75,13 @@ class Registry extends Component {
         <Form layout="inline">
           <Form.Item label="Type">
             <Select
-              value={this.state.type}
-              onChange={(type) => {
-                this.setState({
-                  type,
-                });
+              style={{
+                width: '100px',
               }}
+              value={this.type}
+              onChange={(type) => { this.type = type; }}
             >
-              {_.map(types, type => (<Option value={type} key={type}>{type}</Option>))}
+              {_.map(this.types, type => (<Option value={type} key={type}>{type}</Option>))}
             </Select>
           </Form.Item>
         </Form>
@@ -105,141 +92,67 @@ class Registry extends Component {
               style={{
                 width: '400px',
               }}
-              value={this.state.description}
-              onChange={(e) => {
-                this.setState({
-                  description: e.target.value,
-                });
-              }}
+              defaultValue={this.description}
+              onChange={(e) => { this.description = e.target.value; }}
             />
           </Form.Item>
         </Form>
         <Form layout="inline">
-          <Form.Item label="Dependencies">
-            { dependencies.length > 0 ? null : addDeps }
-          </Form.Item>
+          <Form.Item label="Dependencies" />
         </Form>
         {
-          _.map(dependencies, ({ variable, name }, index) => (
+          _.map(dependencies, ({ version, name }, index) => (
             <Form layout="inline" key={index}>
-              <Form.Item>
-                <Button
-                  type="danger"
-                  icon="close"
-                  shape="circle"
-                  onClick={() => {
-                    this.setState({
-                      dependencies: _.reject(dependencies, (d, idx) => idx === index),
-                    });
-                  }}
+              <Form.Item label="component">
+                <Input
+                  value={name}
+                  disabled
                 />
               </Form.Item>
-              <Form.Item label="import">
-                <Input
-                  value={variable}
+              <Form.Item label="minVersion">
+                <InputNumber
+                  defaultValue={version}
                   onChange={(e) => {
                     this.setState({
                       dependencies: _.map(dependencies, (d, idx) => (
-                        idx === index ? _.defaults({ variable: e.target.value }, d) : d
+                        idx === index ?
+                          _.defaults({ variable: parseInt(e.target.value, 10) }, d) : d
                       )),
                     });
                   }}
                 />
               </Form.Item>
-              <Form.Item label="from">
-                <ComponentSearch
-                  value={name}
-                  onChange={(value) => {
-                    this.setState({
-                      dependencies: _.map(dependencies, (d, idx) => (
-                        idx === index ? _.defaults({
-                          name: value,
-                          }, d) : d
-                      )),
-                    });
-                  }}
-                />
-              </Form.Item>
-              { addDeps }
             </Form>
             ))
         }
         <Form layout="vertical">
           <Form.Item>
-            <InputUrlContent
-              label="Source"
-              language="javascript"
-              isUrl={this.state.source.isUrl}
-              content={this.state.source.data}
-              placeholder="//Input javascript code here"
-              onChange={(value) => {
-                this.setState({
-                  source: {
-                    isUrl: value.isUrl,
-                    data: value.content,
-                  },
-                });
-              }}
-              rows="15"
-            />
-          </Form.Item>
-          <Form.Item>
-            <InputUrlContent
-              isUrl={this.state.sourceDebug.isUrl}
-              content={this.state.sourceDebug.data}
-              label="Source Debug"
-              language="javascript"
-              placeholder="//Input javascript code here"
-              onChange={(value) => {
-                this.setState({
-                  sourceDebug: {
-                    isUrl: value.isUrl,
-                    data: value.content,
-                  },
-                });
-              }}
-              rows="15"
-            />
-          </Form.Item>
-          <Form.Item>
-            <InputUrlContent
-              label="ReadMe"
-              hasPreview
-              language="markdown"
-              isUrl={this.state.readme.isUrl}
-              content={this.state.readme.data}
-              placeholder="//Input markdown code"
-              onChange={(value) => {
-                this.setState({
-                  readme: {
-                    isUrl: value.isUrl,
-                    data: value.content,
-                  },
-                });
-              }}
-              rows="15"
-            />
+            <Tabs defaultActiveKey="source" onChange={() => {}}>
+              <TabPane tab="Source" key="source">{sourceEditor}</TabPane>
+              <TabPane tab="README" key="readme">{readmeEditor}</TabPane>
+              <TabPane tab="Demo" key="demo">{demoEditor}</TabPane>
+            </Tabs>
           </Form.Item>
           <Form.Item>
             <Button
               type="primary"
               onClick={() => {
                 if (_.isFunction(this.props.onSubmit)) {
-                  this.props.onSubmit({
-                    ...this.state,
-                    dependencies: _.reduce(
-                      this.state.dependencies,
-                      (memo, { variable, name: entry }) => (
-                        variable && entry ? _.assign(memo, {
-                          [entry]: variable,
-                        }) : memo
-                      ), {},
-                    ),
-                  });
+                  this.props.onSubmit(this.getComponentConfig());
                 }
               }}
             >
               Sumbit
+            </Button>
+            <Button
+              type="primary"
+              onClick={() => {
+                if (_.isFunction(this.props.onPreview)) {
+                  this.props.onPreview(this.getComponentConfig());
+                }
+              }}
+            >
+              Preview
             </Button>
           </Form.Item>
         </Form>
