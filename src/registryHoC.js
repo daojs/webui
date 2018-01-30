@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import Registry from './registry';
-import { createComponent, getComponentMetadata, getComponentSource, getComponentReadme, getComponentSourceDebug } from './repository';
+import { postComponent, getComponent } from './repository';
 
 function convertDependencies(dependencies) {
   return _.chain(dependencies)
@@ -13,39 +13,22 @@ function convertDependencies(dependencies) {
 export default class RegistryHoC extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { isEditing: false };
   }
 
   componentWillMount() {
-    const componentName = _.get(this.props, 'match.params.componentName');
-    if (componentName) {
-      const [name, version] = componentName.split('@');
-      // TODO: use new API to fetch data
-      getComponentMetadata({ name, version })
+    const name = _.get(this.props, 'match.params.componentName');
+    if (name) {
+      getComponent({ name })
         .then(({ data }) => {
+          // TODO: send another request to get demo code
           this.setState({
             name,
             description: data.description,
             type: data.type,
             dependencies: convertDependencies(data.dependencies),
-          });
-        });
-      getComponentSource({ name, version })
-        .then(({ data }) => {
-          this.setState({
-            source: data,
-          });
-        });
-      getComponentSourceDebug({ name, version })
-        .then(({ data }) => {
-          this.setState({
-            sourceDebug: data,
-          });
-        });
-      getComponentReadme({ name, version })
-        .then(({ data }) => {
-          this.setState({
-            readme: data,
+            source: data.source,
+            readme: data.readme,
           });
         });
     }
@@ -54,7 +37,8 @@ export default class RegistryHoC extends Component {
   render() {
     return (
       <Registry
-        onSubmit={createComponent}
+        onChange={(newState) => { this.setState(newState); }}
+        onSubmit={postComponent}
         onPreview={this.props.onPreview}
         {...this.state}
         style={{

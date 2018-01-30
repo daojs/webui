@@ -7,24 +7,32 @@ import CodeEditor from './codeEditor';
 const { Option } = Select;
 const { TabPane } = Tabs;
 
+function props2State(props) {
+  return {
+    name: (props.name && props.name.substr(2)) || '',
+    type: props.type || 'es2015',
+    description: props.description,
+    dependencies: props.dependencies || [],
+    source: props.source,
+    readme: props.readme,
+    demo: props.demo,
+  };
+}
 class Registry extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      dependencies: props.dependencies || [],
-    };
-    this.source = props.source;
-    this.demo = props.demo;
-    this.readme = props.readme;
-    this.name = (props.name && props.name.substr(2)) || '';
-    this.description = props.description || '';
     this.types = this.props.types || ['es2015'];
-    this.type = props.type || _.first(this.types);
+    this.state = props2State(props);
     this.onSourceChange = this.onSourceChange.bind(this);
+    this.onDemoChange = this.onDemoChange.bind(this);
+    this.onChange = props.onChange || _.noop;
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState(props2State(props));
   }
 
   onSourceChange(source) {
-    this.source = source;
     try {
       const dependencies = _.chain(esprimaParsemodule(source, { jsx: true }).body)
         .filter(syntaxTreeNode => syntaxTreeNode.type === 'ImportDeclaration')
@@ -42,19 +50,25 @@ class Registry extends Component {
         })
         .compact()
         .value();
-      this.setState({
+      this.onChange({
         dependencies,
+        source,
       });
-    } catch (e) {} //eslint-disable-line
+    } catch (e) {
+      this.onChange({
+        source,
+      });
+    } //eslint-disable-line
+  }
+
+  onDemoChange(demo) { // TODO: update demo config, dependiencies and so on
+    this.onChange(demo);
   }
 
   getComponentConfig() {
     return {
-      name: `@/${this.name}`,
-      source: this.source,
-      demo: this.demo,
-      readme: this.readme,
-      type: this.type,
+      ...this.state,
+      name: `@/${this.state.name}`,
       dependencies: _.reduce(
         this.state.dependencies,
         (memo, { version, name }) => (
@@ -71,20 +85,20 @@ class Registry extends Component {
     const sourceEditor = (
       <CodeEditor
         language="javascript"
-        value={this.source}
+        value={this.state.source}
         onChange={this.onSourceChange}
       />);
     const readmeEditor = (
       <CodeEditor
         language="markdown"
-        value={this.readme}
-        onChange={(readme) => { this.readme = readme; }}
+        value={this.state.readme}
+        onChange={(readme) => { this.onChange({ readme }); }}
       />);
     const demoEditor = (
       <CodeEditor
         language="javascript"
-        value={this.demo}
-        onChange={(demo) => { this.demo = demo; }}
+        value={this.state.demo}
+        onChange={this.onDemoChange}
       />);
 
     return (
@@ -93,9 +107,11 @@ class Registry extends Component {
           <Form.Item label="Name">
             <Input
               addonBefore="@/"
-              defaultValue={this.name}
+              value={this.state.name}
               onChange={(e) => {
-                this.name = e.target.value;
+                this.onChange({
+                  name: `@/${e.target.value}`,
+                });
               }}
             />
           </Form.Item>
@@ -106,8 +122,8 @@ class Registry extends Component {
               style={{
                 width: '100px',
               }}
-              value={this.type}
-              onChange={(type) => { this.type = type; }}
+              value={this.state.type}
+              onChange={(type) => { this.onChange({ type }); }}
             >
               {_.map(this.types, type => (<Option value={type} key={type}>{type}</Option>))}
             </Select>
@@ -120,8 +136,8 @@ class Registry extends Component {
               style={{
                 width: '400px',
               }}
-              defaultValue={this.description}
-              onChange={(e) => { this.description = e.target.value; }}
+              value={this.state.description}
+              onChange={(e) => { this.onChange({ description: e.target.value }); }}
             />
           </Form.Item>
         </Form>
@@ -140,9 +156,9 @@ class Registry extends Component {
               <Form.Item label="minVersion">
                 {
                   isComponent ? (<InputNumber
-                    defaultValue={version}
+                    value={version}
                     onChange={(num) => {
-                      this.setState({
+                      this.onChange({
                         dependencies: _.map(dependencies, (d, idx) => (
                           idx === index ?
                             _.defaults({ version: num }, d) : d
@@ -151,9 +167,9 @@ class Registry extends Component {
                     }}
                   />) : (
                     <Input
-                      defaultValue={version}
+                      value={version}
                       onChange={(e) => {
-                        this.setState({
+                        this.onChange({
                           dependencies: _.map(dependencies, (d, idx) => (
                             idx === index ?
                               _.defaults({ version: e.target.value }, d) : d
@@ -187,7 +203,7 @@ class Registry extends Component {
               Sumbit
             </Button>
             <Button
-              type="primary"
+              type="secondary"
               onClick={() => {
                 if (_.isFunction(this.props.onPreview)) {
                   this.props.onPreview(this.getComponentConfig());

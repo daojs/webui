@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Button } from 'antd';
 import { Link } from 'react-router-dom';
-import _ from 'lodash';
-import { getComponentChildren } from './repository';
+import { search } from './repository';
 import ComponentList from './componentList';
 import ComponentSearch from './componentSearchHoC';
 
@@ -10,21 +9,12 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = { items: [], showResults: false };
-    this.search = this.search.bind(this);
+    this.onSearch = this.onSearch.bind(this);
   }
 
-  search(query) {
-    return getComponentChildren({ query })
-      .then(({ data }) => {
-        const { version, children = [] } = data;
-        const list = _.compact(query.split('/'));
-        let items = _.map(children, (item) => {
-          const tmp = list.concat(item);
-          return tmp.join('/');
-        });
-        if (version) {
-          items = [query].concat(items);
-        }
+  onSearch(query) {
+    return search({ query })
+      .then((items) => {
         this.setState({
           items,
           showResults: true,
@@ -48,7 +38,7 @@ export default class Home extends Component {
         >
           <ComponentSearch
             placeholder="search component"
-            onSearch={this.search}
+            onSearch={this.onSearch}
             style={{
               width: '30%',
               minWidth: '400px',

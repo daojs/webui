@@ -76,7 +76,7 @@ export default function (props) {
                     },
                   }}
                 >
-                  {source.data}
+                  {source}
                 </SyntaxHighlighter>
               </Card>
             </Form.Item>
@@ -89,11 +89,11 @@ export default function (props) {
           <Table dataSource={dataSource} columns={columns} />
           <Form>
             <Form.Item>
-              <a href={`/view/${name}@${version}`} >
+              <a href={`/view/${name}`} >
                 <Button icon="play-circle">See demo</Button>
               </a>
               <br />
-              <Link to={`/registry/${name}@${version}`} >
+              <Link to={`/registry/${name}`} >
                 <Button icon="edit">Edit component</Button>
               </Link>
             </Form.Item>

@@ -1,13 +1,13 @@
 import React from 'react';
 import _ from 'lodash';
 import ComponentSearch from './componentSearch';
-import { fetchSuggestion as getSuggestion } from './repository';
+import { listChildren } from './repository';
 
 function fetchSuggestion({ query, dataSource }, callback) {
   if (!_.endsWith(query, '/') && !_.isEmpty(query)) {
     return Promise.resolve(dataSource);
   }
-  return getSuggestion({ query })
+  return listChildren({ query })
     .then(({ data }) => {
       const dateSource = _.map(data.children, item => `${query}${item}`);
       callback(dateSource);
