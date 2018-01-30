@@ -16,7 +16,7 @@ export default class Editor extends Component {
     return (
       <div>
         <div style={{
-            outline: '1px solid #eee',
+            border: '1px solid #eee',
             height: '700px',
           }}
         >

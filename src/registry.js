@@ -15,9 +15,34 @@ function props2State(props) {
     dependencies: props.dependencies || [],
     source: props.source,
     readme: props.readme,
-    demo: props.demo,
+    demo: props.demo || { isDemo: true, type: 'es2015' },
   };
 }
+
+function resolveDependencies(code, deps = []) {
+  try {
+    const dependencies = _.chain(esprimaParsemodule(code, { jsx: true }).body)
+      .filter(syntaxTreeNode => syntaxTreeNode.type === 'ImportDeclaration')
+      .map(({ source: { value: name } }) => {
+        if (!name) {
+          return null;
+        }
+        const isComponent = _.startsWith(name, '@');
+        const { version } = _.find(deps, { name }) || { version: isComponent ? 0 : '*' };
+        return {
+          name,
+          isComponent,
+          version,
+        };
+      })
+      .compact()
+      .value();
+    return dependencies;
+  } catch (e) {
+    return [];
+  } //eslint-disable-line
+}
+
 class Registry extends Component {
   constructor(props) {
     super(props);
@@ -33,50 +58,32 @@ class Registry extends Component {
   }
 
   onSourceChange(source) {
-    try {
-      const dependencies = _.chain(esprimaParsemodule(source, { jsx: true }).body)
-        .filter(syntaxTreeNode => syntaxTreeNode.type === 'ImportDeclaration')
-        .map(({ source: { value: name } }) => {
-          if (!name) {
-            return null;
-          }
-          const isComponent = _.startsWith(name, '@');
-          const { version } = _.find(this.state.dependencies, { name }) || { version: isComponent ? 0 : '*' };
-          return {
-            name,
-            isComponent,
-            version,
-          };
-        })
-        .compact()
-        .value();
+    const dependencies = resolveDependencies(source, this.state.dependencies);
+    if (dependencies.length > 0) {
       this.onChange({
+        source,
         dependencies,
-        source,
       });
-    } catch (e) {
-      this.onChange({
-        source,
-      });
-    } //eslint-disable-line
+    } else {
+      this.onChange({ source });
+    }
   }
 
-  onDemoChange(demo) { // TODO: update demo config, dependiencies and so on
-    this.onChange(demo);
+  onDemoChange(demoSource) { // TODO: update demo config, dependiencies and so on
+    this.onChange({
+      demo: _.defaults({
+        type: 'es2015',
+        isDemo: true,
+        source: demoSource,
+        dependencies: resolveDependencies(demoSource),
+      }, this.state.demo),
+    });
   }
 
   getComponentConfig() {
     return {
       ...this.state,
       name: `@/${this.state.name}`,
-      dependencies: _.reduce(
-        this.state.dependencies,
-        (memo, { version, name }) => (
-          _.assign(memo, {
-            [name]: version,
-          }) : memo
-        ), {},
-      ),
     };
   }
 
@@ -97,7 +104,7 @@ class Registry extends Component {
     const demoEditor = (
       <CodeEditor
         language="javascript"
-        value={this.state.demo}
+        value={this.state.demo.source}
         onChange={this.onDemoChange}
       />);
 
@@ -106,7 +113,7 @@ class Registry extends Component {
         <Form layout="inline">
           <Form.Item label="Name">
             <Input
-              addonBefore="@/"
+              prefix="@/"
               value={this.state.name}
               onChange={(e) => {
                 this.onChange({

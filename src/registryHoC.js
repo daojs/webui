@@ -1,13 +1,34 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
+import Promise from 'bluebird';
 import Registry from './registry';
 import { postComponent, getComponent } from './repository';
 
-function convertDependencies(dependencies) {
+function dependencies2Client(dependencies) {
   return _.chain(dependencies)
     .toPairs()
     .map(pair => ({ name: pair[0], version: pair[1] }))
     .value();
+}
+
+function dependencies2Server(deps) {
+  return _.reduce(
+    deps,
+    (memo, { version, name }) => (
+      _.assign(memo, {
+        [name]: version,
+      }) : memo
+    ), {},
+  );
+}
+
+function onSubmit(data) {
+  const component = _.omit(data, 'demo');
+  const { demo } = data;
+  component.dependencies = dependencies2Server(component.dependencies);
+  demo.dependencies = dependencies2Server(demo.dependencies);
+  demo.name = `${component.name}/demo`;
+  return Promise.each([component, demo], comp => postComponent(comp));
 }
 
 export default class RegistryHoC extends Component {
@@ -20,16 +41,23 @@ export default class RegistryHoC extends Component {
     const name = _.get(this.props, 'match.params.componentName');
     if (name) {
       getComponent({ name })
-        .then(({ data }) => {
-          // TODO: send another request to get demo code
+        .then(({ data: component }) => {
           this.setState({
             name,
-            description: data.description,
-            type: data.type,
-            dependencies: convertDependencies(data.dependencies),
-            source: data.source,
-            readme: data.readme,
+            ...component,
+            dependencies: dependencies2Client(component.dependencies),
           });
+          const { demoList = [`${name}/demo`] } = component; // TODO: only one demo currently
+          return Promise.each(demoList, (demoName) => {
+            getComponent({ name: demoName }).then(({ data: demo }) => {
+              this.setState({
+                demo: {
+                  ...demo,
+                  dependencies: dependencies2Client(demo.dependencies),
+                },
+              });
+            });
+          }).catch(() => {});
         });
     }
   }
@@ -38,7 +66,7 @@ export default class RegistryHoC extends Component {
     return (
       <Registry
         onChange={(newState) => { this.setState(newState); }}
-        onSubmit={postComponent}
+        onSubmit={onSubmit}
         onPreview={this.props.onPreview}
         {...this.state}
         style={{
