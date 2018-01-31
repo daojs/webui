@@ -1,11 +1,9 @@
 import React from 'react';
-import _ from 'lodash';
 import ReactMarkdown from 'react-markdown';
 import { Row, Divider } from 'antd';
-import { SERVICE_URL } from './constants';
 
 export default function (props) {
-  const { readme, demo = {} } = props;
+  const { readme, demoUrl } = props;
   let markdown = null;
   if (readme) {
     markdown = (
@@ -19,8 +17,7 @@ export default function (props) {
   }
 
   let demoContent = null;
-  if (demo.name) {
-    const source = `${SERVICE_URL}/view/${demo.name}`;
+  if (demoUrl) {
     demoContent = (
       <div>
         <Divider>
@@ -28,7 +25,7 @@ export default function (props) {
         </Divider>
         <iframe
           title="preivew"
-          src={source}
+          src={demoUrl}
           style={{
             border: 'none',
             width: '100%',
