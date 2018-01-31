@@ -84,6 +84,10 @@ class Registry extends Component {
     return {
       ...this.state,
       name: `@/${this.state.name}`,
+      demo: {
+        name: `@/${this.state.name}/demo`,
+        ...this.state.demo,
+      },
     };
   }
 

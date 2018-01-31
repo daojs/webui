@@ -35,6 +35,7 @@ export default class RegistryHoC extends Component {
   constructor(props) {
     super(props);
     this.state = { isEditing: false };
+    this.onPreview = this.onPreview.bind(this);
   }
 
   componentWillMount() {
@@ -52,6 +53,7 @@ export default class RegistryHoC extends Component {
             getComponent({ name: demoName }).then(({ data: demo }) => {
               this.setState({
                 demo: {
+                  name: demoName,
                   ...demo,
                   dependencies: dependencies2Client(demo.dependencies),
                 },
@@ -62,12 +64,20 @@ export default class RegistryHoC extends Component {
     }
   }
 
+  onPreview(data) {
+    onSubmit(data).then(() => {
+      if (_.isFunction(this.props.onPreview)) {
+        this.props.onPreview(data);
+      }
+    });
+  }
+
   render() {
     return (
       <Registry
         onChange={(newState) => { this.setState(newState); }}
         onSubmit={onSubmit}
-        onPreview={this.props.onPreview}
+        onPreview={this.onPreview}
         {...this.state}
         style={{
           padding: '20px',
