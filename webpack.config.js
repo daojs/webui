@@ -8,7 +8,7 @@ module.exports = {
   ],
   output: {
     path: `${__dirname}/dist`,
-    filename: './dist/bundle.js',
+    filename: './bundle.js',
   },
   devServer: {
     contentBase: './',
@@ -17,7 +17,7 @@ module.exports = {
   module: {
     rules: [
       { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader' },
-      { test: /\.js$/, exclude: /node_modules/, loader: 'eslint-loader' },
+      // { test: /\.js$/, exclude: /node_modules/, loader: 'eslint-loader' },
       { test: /\.css/, loader: ['style-loader', 'css-loader'] },
     ],
   },

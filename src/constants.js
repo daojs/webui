@@ -1,1 +1,1 @@
-export const SERVICE_URL = 'http://localhost:3000';
+export const SERVICE_URL = `http://${window.location.host.split(':')[0]}:3000`;
