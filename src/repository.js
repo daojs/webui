@@ -14,25 +14,15 @@ export function postComponent(options) {
     });
 }
 
+const getAllComponents = axios.get(`${SERVICE_URL}/list/@/`)
+  .then(response => _.get(response, 'data.children', []))
+  .catch(() => []);
+
 // TODO: will support real query, just list and concat children
 export function search({
   query = '',
 } = {}) {
-  const url = `${SERVICE_URL}/list/@/${query}`;
-  return axios
-    .get(url)
-    .then(({ data }) => {
-      const { version, children = [] } = data;
-      const list = _.compact(query.split('/'));
-      let items = _.map(children, (item) => {
-        const tmp = list.concat(item);
-        return tmp.join('/');
-      });
-      if (version) {
-        items = [query].concat(items);
-      }
-      return items;
-    });
+  return getAllComponents.then(comps => _.filter(comps, comp => _.includes(comp, query)));
 }
 
 // TODO: just list direct children of query

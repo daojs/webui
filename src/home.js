@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { Button } from 'antd';
-import { Link } from 'react-router-dom';
 import { search } from './repository';
 import ComponentList from './componentList';
-import ComponentSearch from './componentSearchHoC';
+import ComponentSearch from './componentSearch';
 import HomeLayout from './home-layout';
 
 export default class Home extends Component {
@@ -14,22 +12,16 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    search().then((items) => {
+    this.onSearch();
+  }
+
+  onSearch(query) {
+    return search({ query }).then((items) => {
       this.setState({
         items,
         showResults: true,
       });
     });
-  }
-
-  onSearch(query) {
-    return search({ query })
-      .then((items) => {
-        this.setState({
-          items,
-          showResults: true,
-        });
-      });
   }
 
   render() {
@@ -42,10 +34,6 @@ export default class Home extends Component {
             width: '100%',
           }}
         />
-        {/* <Button style={{ marginLeft: '20px' }}>
-          <Link to={{ pathname: this.props.registryLink }}>Registry New Component</Link> { //eslint-disable-line
-          }
-        </Button> */}
         <ComponentList
           items={this.state.items}
           showResults={this.state.showResults}
