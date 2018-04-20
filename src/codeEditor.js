@@ -28,6 +28,12 @@ export default class Editor extends Component {
               },
               automaticLayout: true,
             }}
+            requireConfig={{
+              url: '/dist/vs/loader.js',
+              paths: {
+                vs: '/dist/vs',
+              },
+            }}
             {...this.props}
           />
         </div>
