@@ -7,9 +7,8 @@ export default function (props) {
   let results = null;
   if (showResults) {
     results = (
-      <h3>
+      <h3 style={{ color: '#fff' }}>
         {total} component result(s)
-        <Divider />
       </h3>
     );
   }
@@ -17,8 +16,7 @@ export default function (props) {
     <Form
       layout="vertical"
       style={{
-        marginTop: '50px',
-        width: '50%',
+        marginTop: '20px',
       }}
     >
       {results}

@@ -17,7 +17,6 @@ export default class extends Component {
       value: props.value || '',
     };
     this.onChange = this.onChange.bind(this);
-    this.onSearchComponents = this.onSearchComponents.bind(this);
     this.onSearch = this.onSearch.bind(this);
   }
 
@@ -35,7 +34,7 @@ export default class extends Component {
     this.updateDataSource(value);
   }
 
-  onSearchComponents(value) {
+  onSearchComponents = (value) => {
     this.setState({
       dataSource: [],
     });
@@ -57,7 +56,7 @@ export default class extends Component {
     if (_.isFunction(this.props.onSearchComponents)) {
       inputType = (
         <Search
-          enterButton
+          enterButton={false}
           onSearch={this.onSearchComponents}
         />);
     }

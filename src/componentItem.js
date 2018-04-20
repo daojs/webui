@@ -7,9 +7,9 @@ export default function (props) {
   return (
     <div>
       <h3>
-        <Link to={{ pathname: `/detail/${name}` }}>{name}</Link> { //eslint-disable-line
+        <p to={{ pathname: `/detail/${name}` }}>{name}</p> { //eslint-disable-line
         }
-        <Button
+        {/* <Button
           style={{
             border: 'none',
           }}
@@ -20,10 +20,8 @@ export default function (props) {
           >
             <Icon type="edit" />
           </Link>
-        </Button>
+        </Button> */}
       </h3>
-      <p>{description}</p>
-      <Divider />
     </div>
   );
 }

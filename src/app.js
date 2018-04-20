@@ -20,7 +20,6 @@ export default function App() {
           position: 'fixed',
           height: '100%',
           width: '100%',
-          marginTop: '20px',
           overflow: 'auto',
         }}
       >

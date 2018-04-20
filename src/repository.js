@@ -14,8 +14,11 @@ export function postComponent(options) {
     });
 }
 
-export function search({ query }) { // TODO: will support real query, just list and concat children
-  const url = `${SERVICE_URL}/list/${query}`;
+// TODO: will support real query, just list and concat children
+export function search({
+  query = '',
+} = {}) {
+  const url = `${SERVICE_URL}/list/@/${query}`;
   return axios
     .get(url)
     .then(({ data }) => {
@@ -32,8 +35,11 @@ export function search({ query }) { // TODO: will support real query, just list 
     });
 }
 
-export function listChildren({ query }) { // TODO: just list direct children of query
-  const url = `${SERVICE_URL}/list/${query}`;
+// TODO: just list direct children of query
+export function listChildren({
+  query,
+} = {}) {
+  const url = `${SERVICE_URL}/list/@/${query}`;
   return axios
     .get(url)
     .catch((e) => {
