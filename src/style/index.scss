@@ -2,16 +2,4 @@ body > #container {
   .ant-btn, .ant-input {
     border-radius: 1px;
   }
-
-  .appicon {
-    button {
-      cursor: default;
-      border-color: #aaa;
-    }
-    button:last-child {
-      padding: 0 10px;
-      font-size: 18px;
-    }
-    margin-bottom: 20px;
-  }
 }
