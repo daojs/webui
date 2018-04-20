@@ -6,6 +6,7 @@
   "author": "Wei Wei <lyweiwei@outlook.com>",
   "license": "MIT",
   "scripts": {
+    "build": "webpack",
     "start": "webpack-dev-server"
   },
   "devDependencies": {

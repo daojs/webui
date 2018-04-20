@@ -9,6 +9,10 @@ module.exports = {
   output: {
     path: `${__dirname}/dist`,
     filename: './bundle.js',
+    // Config for dev server
+    // Without this config, the bundle would be served at /bundle.js
+    // With this config, the bundle would be served at /dist/bundle.js
+    publicPath: '/dist/',
   },
   devServer: {
     contentBase: './',
