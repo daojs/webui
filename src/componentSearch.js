@@ -16,6 +16,7 @@ export default class extends Component {
   render() {
     return (
       <Search
+        placeholder="Filter"
         enterButton={false}
         onKeyUp={this.onSearch}
       />
