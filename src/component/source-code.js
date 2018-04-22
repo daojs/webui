@@ -13,7 +13,7 @@ registerLanguage('jsx', jsx);
 
 export default function SourceCode(props) {
   return (
-    <div style={{ border: '1px solid #eee', borderTop: '0', lineHeight: '18px' }}>
+    <div className="source-code" style={{ border: '1px solid #eee', borderTop: '0', lineHeight: '18px' }}>
       <SyntaxHighlighter
         language="jsx"
         style={vs}
@@ -24,6 +24,7 @@ export default function SourceCode(props) {
             wordBreak: 'break-all',
             wordWrap: 'break-word',
             whiteSpace: 'pre-wrap',
+            border: '0',
           },
         }}
       >
