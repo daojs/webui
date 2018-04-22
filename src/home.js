@@ -14,41 +14,40 @@ export default class Home extends Component {
       showResults: false,
       selectedIndex: 0,
     };
-    this.onSearch = this.onSearch.bind(this);
   }
 
   componentDidMount() {
     this.onSearch();
   }
 
-  onSearch(query) {
-    return search({ query }).then((items) => {
-      this.setState({
-        items,
-        showResults: true,
-      });
+  onSearch = query => search({ query }).then((items) => {
+    this.setState({
+      items,
+      showResults: true,
     });
+  })
+
+  onSelect = (selectedIndex) => {
+    this.setState({ selectedIndex });
   }
 
   render() {
     const LeftComp = (
       <div>
         <ComponentSearch
-          placeholder="search component"
           onSearch={this.onSearch}
-          style={{
-            width: '100%',
-          }}
+          style={{ width: '100%' }}
         />
         <ComponentList
           items={this.state.items}
           showResults={this.state.showResults}
+          onSelect={this.onSelect}
         />
       </div>
     );
 
     const RightComp = (
-      <ComponentDetail name={_.get(this.state, 'items[0]', '')} />
+      <ComponentDetail name={_.get(this.state, `items[${this.state.selectedIndex}]`, '')} />
     );
 
     return (
