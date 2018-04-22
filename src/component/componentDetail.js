@@ -1,39 +1,32 @@
 import _ from 'lodash';
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Row, Col, Table, Card, Form, Button } from 'antd';
+import { Row, Col, Card, Form } from 'antd';
 import ReactMarkdown from 'react-markdown';
 import { SERVICE_URL } from '../constants';
+import SourceCode from './source-code';
+import DependencyList from './dependency-list';
 
+const styles = {
+  row: {
+    background: '#fff',
+    marginTop: '15px',
+  },
+};
 
 export default function (props) {
   const {
     name,
     description,
-    version,
     dependencies,
+    version,
     readme = '',
+    demo,
   } = props;
 
-  const dataSource = _.reduce(dependencies, (result, value, key) => result.concat({
-    key,
-    name: key,
-    version: value.version || 'latest',
-  }), []);
-
-  const columns = [{
-    title: 'name',
-    dataIndex: 'name',
-    key: 'name',
-  }, {
-    title: 'version',
-    dataIndex: 'version',
-    key: 'version',
-  }];
 
   return (
     <div>
-      <Row style={{ background: '#fff', marginTop: '15px' }} >
+      <Row style={styles.row} >
         <Col span={24}>
           <iframe
             title="demo"
@@ -42,7 +35,7 @@ export default function (props) {
           />
         </Col>
       </Row>
-      <Row style={{ background: '#fff', marginTop: '15px', marginBottom: '15px' }}>
+      <Row style={_.defaults({ marginBottom: '15px' }, styles.row)}>
         <Col span={14} offset={2}>
           <Form>
             <Form.Item>
@@ -65,13 +58,13 @@ export default function (props) {
                 <ReactMarkdown source={readme} />
               </Card>
             </Form.Item>
+            <SourceCode source={demo.source || ''} />
           </Form>
         </Col>
         <Col span={5} offset={1}>
           <h3>Version</h3>
           <p>{version}</p>
-          <h3>Dependencies</h3>
-          <Table dataSource={dataSource} columns={columns} />
+          <DependencyList dependencies={dependencies} />
         </Col>
       </Row>
     </div>

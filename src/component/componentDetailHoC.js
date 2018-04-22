@@ -32,13 +32,21 @@ export default class extends Component {
   }
 
   loadData() {
-    if (!_.isNull(this.state.data) || _.isEmpty(this.state.name)) {
+    const { name, data } = this.state;
+    if (!_.isNull(data) || _.isEmpty(name)) {
       return;
     }
-    getComponent({ name: this.state.name })
-      .then(({ data }) => {
-        this.setState({ data });
+    Promise.all([
+      getComponent({ name }),
+      getComponent({ name: `${name}/demo` }),
+    ]).then(([
+      { data: self },
+      { data: demo },
+    ]) => {
+      this.setState({
+        data: { ...self, demo: { ...demo } },
       });
+    });
   }
 
   render() {
