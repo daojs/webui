@@ -2,9 +2,8 @@ import _ from 'lodash';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Row, Col, Table, Card, Form, Button } from 'antd';
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import { vs } from 'react-syntax-highlighter/styles/hljs';
 import ReactMarkdown from 'react-markdown';
+import { SERVICE_URL } from './constants';
 
 
 export default function (props) {
@@ -13,7 +12,6 @@ export default function (props) {
     description,
     version,
     dependencies,
-    source,
     readme = '',
   } = props;
 
@@ -35,7 +33,16 @@ export default function (props) {
 
   return (
     <div>
-      <Row>
+      <Row style={{ background: '#fff', marginTop: '15px' }} >
+        <Col span={24}>
+          <iframe
+            title="demo"
+            src={`${SERVICE_URL}/view/@/${name}/demo`}
+            style={{ width: '100%', height: '500px', border: '0' }}
+          />
+        </Col>
+      </Row>
+      <Row style={{ background: '#fff', marginTop: '15px', marginBottom: '15px' }}>
         <Col span={14} offset={2}>
           <Form>
             <Form.Item>
@@ -56,28 +63,6 @@ export default function (props) {
                 title="README.md"
               >
                 <ReactMarkdown source={readme} />
-              </Card>
-            </Form.Item>
-            <Form.Item>
-              <Card
-                type="inner"
-                title="Source code"
-              >
-                <SyntaxHighlighter
-                  language="javascript"
-                  style={vs}
-                  codeTagProps={{
-                    style: {
-                      display: 'block',
-                      width: '100%',
-                      wordBreak: 'break-all',
-                      wordWrap: 'break-word',
-                      whiteSpace: 'pre-wrap',
-                    },
-                  }}
-                >
-                  {source}
-                </SyntaxHighlighter>
               </Card>
             </Form.Item>
           </Form>

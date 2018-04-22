@@ -28,7 +28,7 @@ export default function HomeLayout(props) {
       <Sider
         trigger={null}
         width={280}
-        style={{ background: '#f0f2f5', borderRight: '1px solid #ddd' }}
+        style={{ background: '#f0f2f5' }}
       >
         <div
           style={{ padding: '10px' }}
@@ -48,10 +48,8 @@ export default function HomeLayout(props) {
         </div>
       </Sider>
       <Layout>
-        <Content style={{ margin: '0 16px' }}>
-          <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-            {RightComp}
-          </div>
+        <Content style={{ margin: '0 10px 0 0' }}>
+          {RightComp}
         </Content>
       </Layout>
     </Layout>
