@@ -39,7 +39,7 @@ export function listChildren({
 }
 
 export function getComponent({ name, version = 0 }) {
-  let url = `${SERVICE_URL}/components/${name}`;
+  let url = `${SERVICE_URL}/components/@/${name}`;
   if (version) {
     url = `${url}?v=${version}`;
   }
