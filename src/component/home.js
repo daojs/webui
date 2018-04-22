@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { search } from './repository';
+import { search } from '../repository';
 import ComponentList from './componentList';
 import ComponentSearch from './componentSearch';
 import ComponentDetail from './componentDetailHoC';

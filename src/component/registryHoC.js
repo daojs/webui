@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import Promise from 'bluebird';
 import Registry from './registry';
-import { postComponent, getComponent } from './repository';
+import { postComponent, getComponent } from '../repository';
 
 function dependencies2Client(dependencies) {
   return _.chain(dependencies)

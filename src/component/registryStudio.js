@@ -3,7 +3,7 @@ import { Row, Col } from 'antd';
 import _ from 'lodash';
 import Registry from './registryHoC';
 import Preview from './preview';
-import { SERVICE_URL } from './constants';
+import { SERVICE_URL } from '../constants';
 
 export default class extends Component {
   constructor(props) {

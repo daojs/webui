@@ -1,8 +1,8 @@
 import React from 'react';
 import { HashRouter, Route } from 'react-router-dom';
-import ComponentDetail from './componentDetailHoC';
-import RegistryStudio from './registryStudio';
-import Home from './home';
+import ComponentDetail from './component/componentDetailHoC';
+import RegistryStudio from './component/registryStudio';
+import Home from './component/home';
 
 function HomeHoC() {
   return (

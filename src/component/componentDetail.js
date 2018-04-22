@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Row, Col, Table, Card, Form, Button } from 'antd';
 import ReactMarkdown from 'react-markdown';
-import { SERVICE_URL } from './constants';
+import { SERVICE_URL } from '../constants';
 
 
 export default function (props) {
@@ -72,17 +72,6 @@ export default function (props) {
           <p>{version}</p>
           <h3>Dependencies</h3>
           <Table dataSource={dataSource} columns={columns} />
-          <Form>
-            <Form.Item>
-              <a href={`/view/${name}`} >
-                <Button icon="play-circle">See demo</Button>
-              </a>
-              <br />
-              <Link to={`/registry/${name}`} >
-                <Button icon="edit">Edit component</Button>
-              </Link>
-            </Form.Item>
-          </Form>
         </Col>
       </Row>
     </div>

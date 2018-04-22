@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import ComponentDetail from './componentDetail';
-import { getComponent } from './repository';
+import { getComponent } from '../repository';
 
 export default class extends Component {
   static propTypes = {
