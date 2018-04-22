@@ -1,14 +1,13 @@
 import React from 'react';
 import {
   Layout,
-  Breadcrumb,
   Icon,
   Button,
 } from 'antd';
 import _ from 'lodash';
 
 const {
-  Header, Content, Footer, Sider,
+  Content, Sider,
 } = Layout;
 
 const styles = {
@@ -19,54 +18,42 @@ const styles = {
   },
 };
 
-export default class HomeLayout extends React.Component {
-  state = {
-    collapsed: false,
-  };
-  onCollapse = (collapsed) => {
-    console.log(collapsed);
-    this.setState({ collapsed });
-  }
-  render() {
-    const {
-      LeftComp, RightComp,
-    } = this.props;
+export default function HomeLayout(props) {
+  const {
+    LeftComp, RightComp,
+  } = props;
 
-    return (
-      <Layout style={{ minHeight: '100vh' }}>
-        <Sider
-          trigger={null}
-          collapsible
-          collapsed={this.state.collapsed}
-          onCollapse={this.onCollapse}
-          width={280}
-          style={{ background: '#f0f2f5', borderRight: '1px solid #ddd' }}
+  return (
+    <Layout style={{ minHeight: '100vh' }}>
+      <Sider
+        trigger={null}
+        width={280}
+        style={{ background: '#f0f2f5', borderRight: '1px solid #ddd' }}
+      >
+        <div
+          style={{ padding: '10px' }}
         >
           <div
-            style={{ padding: '10px' }}
+            className="appicon"
+            style={{ display: 'flex', flexDirection: 'row', marginBottom: '10px' }}
           >
-            <div
-              className="appicon"
-              style={{ display: 'flex', flexDirection: 'row', marginBottom: '10px' }}
-            >
-              <Button ghost style={_.defaults({ flex: 1, marginRight: '10px', fontWeight: 'bold' }, styles.button)}>
-                Dao Registry
-              </Button>
-              <Button ghost style={_.defaults({ padding: '0 10px' }, styles.button)}>
-                <Icon type="appstore-o" />
-              </Button>
-            </div>
-            {LeftComp}
+            <Button ghost style={_.defaults({ flex: 1, marginRight: '10px', fontWeight: 'bold' }, styles.button)}>
+              Dao Registry
+            </Button>
+            <Button ghost style={_.defaults({ padding: '0 10px' }, styles.button)}>
+              <Icon type="appstore-o" />
+            </Button>
           </div>
-        </Sider>
-        <Layout>
-          <Content style={{ margin: '0 16px' }}>
-            <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-              {RightComp}
-            </div>
-          </Content>
-        </Layout>
+          {LeftComp}
+        </div>
+      </Sider>
+      <Layout>
+        <Content style={{ margin: '0 16px' }}>
+          <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
+            {RightComp}
+          </div>
+        </Content>
       </Layout>
-    );
-  }
+    </Layout>
+  );
 }
