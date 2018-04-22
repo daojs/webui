@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
+import PropTypes from 'prop-types';
 import ComponentDetail from './componentDetail';
 import { getComponent } from './repository';
 
 export default class extends Component {
+  static propTypes = {
+    name: PropTypes.string.isRequired,
+  }
+
   constructor(props) {
     super(props);
-    const name = _.get(this.props, 'match.params.componentName');
-    this.name = name;
     this.state = {
-      name,
+      name: props.name,
       description: '',
       dependencies: {},
       source: '',
@@ -19,7 +21,7 @@ export default class extends Component {
   }
 
   componentWillMount() {
-    getComponent({ name: this.name })
+    getComponent({ name: this.state.name })
       .then(({ data }) => {
         this.setState(data);
       });

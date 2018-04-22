@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 import { search } from './repository';
 import ComponentList from './componentList';
 import ComponentSearch from './componentSearch';
+import ComponentDetail from './componentDetailHoC';
 import HomeLayout from './home-layout';
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = { items: [], showResults: false };
+    this.state = {
+      items: [],
+      showResults: false,
+      selectedIndex: 0,
+    };
     this.onSearch = this.onSearch.bind(this);
   }
 
@@ -41,8 +47,12 @@ export default class Home extends Component {
       </div>
     );
 
+    const RightComp = (
+      <ComponentDetail name={_.get(this.state, 'items[0]', '')} />
+    );
+
     return (
-      <HomeLayout LeftComp={LeftComp} />
+      <HomeLayout LeftComp={LeftComp} RightComp={RightComp} />
     );
   }
 }
