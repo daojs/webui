@@ -15,7 +15,10 @@ export function postComponent(options) {
 }
 
 const getAllComponents = axios.get(`${SERVICE_URL}/list/@/`)
-  .then(response => _.get(response, 'data.children', []))
+  .then(response => _.chain(response)
+    .get('data.children', [])
+    .reject(item => _.includes(['base-chart', 'echarts-for-react'], item))
+    .value())
   .catch(() => []);
 
 // TODO: will support real query, just list and concat children
