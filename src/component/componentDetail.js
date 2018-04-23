@@ -74,6 +74,7 @@ export default class ComponentDetail extends Component {
                 <Card
                   type="inner"
                   title="README.md"
+                  className="readme"
                 >
                   <ReactMarkdown source={readme} />
                 </Card>
