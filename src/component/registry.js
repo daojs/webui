@@ -121,7 +121,7 @@ class Registry extends Component {
               value={this.state.name}
               onChange={(e) => {
                 this.onChange({
-                  name: `@/${e.target.value}`,
+                  name: e.target.value,
                 });
               }}
             />
