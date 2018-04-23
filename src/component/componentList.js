@@ -28,7 +28,7 @@ export default function (props) {
           <TreeNode
             title={item}
             key={_.toString(index)}
-            icon={<Icon type="right" />}
+            icon={<Icon type="dot-chart" />}
           />))
         }
       </Tree>
