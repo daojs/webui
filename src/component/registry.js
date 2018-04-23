@@ -9,7 +9,7 @@ const { TabPane } = Tabs;
 
 function props2State(props) {
   return {
-    name: (props.name && props.name.substr(2)) || '',
+    name: props.name || '',
     type: props.type || 'es2015',
     description: props.description,
     dependencies: props.dependencies || [],
