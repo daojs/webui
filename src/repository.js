@@ -1,6 +1,6 @@
 import axios from 'axios';
 import _ from 'lodash';
-import { SERVICE_URL } from './constants';
+import { SERVICE_URL, BLACK_LIST } from './constants';
 
 export function postComponent(options) {
   const { name } = options;
@@ -17,7 +17,7 @@ export function postComponent(options) {
 const getAllComponents = axios.get(`${SERVICE_URL}/list/@/`)
   .then(response => _.chain(response)
     .get('data.children', [])
-    .reject(item => _.includes(['base-chart', 'echarts-for-react', 'atlas-chart', 'chart-util'], item))
+    .reject(item => _.includes(BLACK_LIST, item))
     .value())
   .catch(() => []);
 
