@@ -17,7 +17,7 @@ export function postComponent(options) {
 const getAllComponents = axios.get(`${SERVICE_URL}/list/@/`)
   .then(response => _.chain(response)
     .get('data.children', [])
-    .reject(item => _.includes(['base-chart', 'echarts-for-react', 'atlas-chart'], item))
+    .reject(item => _.includes(['base-chart', 'echarts-for-react', 'atlas-chart', 'chart-util'], item))
     .value())
   .catch(() => []);
 
