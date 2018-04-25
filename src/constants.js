@@ -5,4 +5,5 @@ export const BLACK_LIST = [
   'base-chart',
   'chart-util',
   'echarts-for-react',
+  'echarts-map-china',
 ];
