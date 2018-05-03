@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 import { search } from '../repository';
 import ComponentList from './componentList';
 import ComponentSearch from './componentSearch';
@@ -9,9 +10,9 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: [],
+      comps: [],
       showResults: false,
-      selectedName: '',
+      selectedCompName: '',
     };
   }
 
@@ -19,15 +20,16 @@ export default class Home extends Component {
     this.onSearch();
   }
 
-  onSearch = query => search({ query }).then((items) => {
+  onSearch = query => search({ query }).then((comps) => {
     this.setState({
-      items,
+      comps,
       showResults: true,
+      selectedCompName: _.get(comps, '[0].name', ''),
     });
   })
 
-  onSelect = (selectedName) => {
-    this.setState({ selectedName });
+  onSelect = (selectedCompName) => {
+    this.setState({ selectedCompName });
   }
 
   render() {
@@ -38,7 +40,8 @@ export default class Home extends Component {
           style={{ width: '100%' }}
         />
         <ComponentList
-          items={this.state.items}
+          comps={this.state.comps}
+          selectedCompName={this.state.selectedCompName}
           showResults={this.state.showResults}
           onSelect={this.onSelect}
         />
@@ -46,7 +49,7 @@ export default class Home extends Component {
     );
 
     const RightComp = (
-      <ComponentDetail name={this.state.selectedName} />
+      <ComponentDetail name={this.state.selectedCompName} />
     );
 
     return (

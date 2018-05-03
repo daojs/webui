@@ -2,10 +2,10 @@ import React from 'react';
 import _ from 'lodash';
 import { Form, Icon, Menu } from 'antd';
 
-function renderCategoryFactory(items) {
+function renderCategoryFactory(comps) {
   return (Component, props) => (
     <Component title={props.title} key={props.key}>
-      { items.filter(item => _.includes(item.category, props.key)).map(item => (
+      { comps.filter(item => _.includes(item.category, props.key)).map(item => (
         <Menu.Item key={item.name} >
           <Icon type="dot-chart" />{item.name}
         </Menu.Item>
@@ -15,31 +15,19 @@ function renderCategoryFactory(items) {
 }
 
 export default class ComponentList extends React.Component {
-  // Hack for antd: defaultSelectedKeys for Menu does not work correctly
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (_.isArray(nextProps.items) &&
-      !_.isEmpty(nextProps.items) &&
-      _.isNull(prevState.selectedKey)) {
-      return {
-        selectedKey: nextProps.items[0].name,
-      };
-    }
-    return null;
-  }
-
-  state = {
-    selectedKey: null,
-  }
-
   onClick = ({ key }) => {
     // key is component name
-    this.setState({ selectedKey: key });
     this.props.onSelect(key);
   }
 
   render() {
-    const { items = [], total = items.length, showResults } = this.props;
-    const renderCategory = renderCategoryFactory(items);
+    const {
+      comps = [],
+      total = comps.length,
+      selectedCompName,
+      showResults,
+    } = this.props;
+    const renderCategory = renderCategoryFactory(comps);
 
     return (
       <Form
@@ -55,7 +43,7 @@ export default class ComponentList extends React.Component {
         <Menu
           mode="inline"
           defaultOpenKeys={['layout', 'container', 'component']}
-          selectedKeys={[this.state.selectedKey]}
+          selectedKeys={[selectedCompName]}
           onClick={this.onClick}
         >
 
