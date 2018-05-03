@@ -55,7 +55,7 @@ class Header extends React.PureComponent {
           mode="horizontal"
           style={{ background: 'transparent', borderBottom: '0' }}
         >
-          <Menu.Item key="/basic">
+          <Menu.Item key="/">
             <Icon type="dot-chart" />基础模块
           </Menu.Item>
           <Menu.Item key="/advanced">

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
 import { search } from '../repository';
 import ComponentList from './componentList';
 import ComponentSearch from './componentSearch';
@@ -12,7 +11,7 @@ export default class Home extends Component {
     this.state = {
       items: [],
       showResults: false,
-      selectedIndex: 0,
+      selectedName: '',
     };
   }
 
@@ -27,8 +26,8 @@ export default class Home extends Component {
     });
   })
 
-  onSelect = (selectedIndex) => {
-    this.setState({ selectedIndex });
+  onSelect = (selectedName) => {
+    this.setState({ selectedName });
   }
 
   render() {
@@ -47,7 +46,7 @@ export default class Home extends Component {
     );
 
     const RightComp = (
-      <ComponentDetail name={_.get(this.state, `items[${this.state.selectedIndex}]`, '')} />
+      <ComponentDetail name={this.state.selectedName} />
     );
 
     return (

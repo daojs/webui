@@ -17,7 +17,7 @@ export function postComponent(options) {
 const getAllComponents = axios.get(`${SERVICE_URL}/list/@/`)
   .then(response => _.chain(response)
     .get('data.children', [])
-    .reject(item => _.includes(BLACK_LIST, item))
+    .reject(item => _.includes(BLACK_LIST, item.name))
     .value())
   .catch(() => []);
 
@@ -25,7 +25,7 @@ const getAllComponents = axios.get(`${SERVICE_URL}/list/@/`)
 export function search({
   query = '',
 } = {}) {
-  return getAllComponents.then(comps => _.filter(comps, comp => _.includes(comp, query)));
+  return getAllComponents.then(comps => _.filter(comps, comp => _.includes(comp.name, query)));
 }
 
 // TODO: just list direct children of query

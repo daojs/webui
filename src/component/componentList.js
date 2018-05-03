@@ -1,8 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
-import { Form, Tree, Icon } from 'antd';
+import { Form, Icon, Menu } from 'antd';
 
-const { TreeNode } = Tree;
 
 export default function (props) {
   const { items = [], total = items.length, showResults } = props;
@@ -18,20 +17,28 @@ export default function (props) {
         <p>{total} component result(s)</p>
       }
 
-      <Tree
-        showIcon
+      <Menu
+        mode="inline"
         defaultExpandAll
         defaultSelectedKeys={['0']}
-        onSelect={selectedKeys => props.onSelect(_.toInteger(selectedKeys[0]))}
+        onClick={({ key }) => props.onSelect(key)}
+        onSelect={(e) => {
+          console.log(e);
+        }}
       >
-        { items.map((item, index) => (
-          <TreeNode
-            title={item}
-            key={_.toString(index)}
-            icon={<Icon type="dot-chart" />}
-          />))
-        }
-      </Tree>
+        <Menu.SubMenu title="Layout" />
+        <Menu.SubMenu title="Container" />
+        <Menu.SubMenu title="Components" >
+          <Menu.ItemGroup title="Charts">
+            { items.filter(item => _.includes(item.category, 'chart')).map(item => (
+              <Menu.Item key={item.name} >
+                <Icon type="dot-chart" />{item.name}
+              </Menu.Item>
+            )) }
+          </Menu.ItemGroup>
+          <Menu.ItemGroup title="Slicers" />
+        </Menu.SubMenu>
+      </Menu>
     </Form>
   );
 }
