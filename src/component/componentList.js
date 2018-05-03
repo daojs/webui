@@ -14,36 +14,60 @@ function renderCategoryFactory(items) {
   );
 }
 
-export default function (props) {
-  const { items = [], total = items.length, showResults } = props;
-  const renderCategory = renderCategoryFactory(items);
+export default class ComponentList extends React.Component {
+  // Hack for antd: defaultSelectedKeys for Menu does not work correctly
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (_.isArray(nextProps.items) &&
+      !_.isEmpty(nextProps.items) &&
+      _.isNull(prevState.selectedKey)) {
+      return {
+        selectedKey: nextProps.items[0].name,
+      };
+    }
+    return null;
+  }
 
-  return (
-    <Form
-      layout="vertical"
-      style={{
-        marginTop: '20px',
-      }}
-    >
-      { showResults &&
-        <p>{total} component result(s)</p>
-      }
+  state = {
+    selectedKey: null,
+  }
 
-      <Menu
-        mode="inline"
-        defaultExpandAll
-        defaultSelectedKeys={['0']}
-        // key is component name
-        onClick={({ key }) => props.onSelect(key)}
+  onClick = ({ key }) => {
+    // key is component name
+    this.setState({ selectedKey: key });
+    this.props.onSelect(key);
+  }
+
+  render() {
+    const { items = [], total = items.length, showResults } = this.props;
+    const renderCategory = renderCategoryFactory(items);
+
+    return (
+      <Form
+        layout="vertical"
+        style={{
+          marginTop: '20px',
+        }}
       >
-        <Menu.SubMenu title="Layout" />
-        { renderCategory(Menu.SubMenu, { title: 'Container', key: 'container' }) }
-        <Menu.SubMenu title="Components" >
-          { renderCategory(Menu.ItemGroup, { title: 'Charts', key: 'chart' }) }
-          { renderCategory(Menu.ItemGroup, { title: 'Slicers', key: 'slicer' }) }
-          { renderCategory(Menu.ItemGroup, { title: 'Utilities', key: 'utility' }) }
-        </Menu.SubMenu>
-      </Menu>
-    </Form>
-  );
+        { showResults &&
+          <p>{total} component result(s)</p>
+        }
+
+        <Menu
+          mode="inline"
+          defaultOpenKeys={['layout', 'container', 'component']}
+          selectedKeys={[this.state.selectedKey]}
+          onClick={this.onClick}
+        >
+
+          { renderCategory(Menu.SubMenu, { title: 'Layout', key: 'layout' }) }
+          { renderCategory(Menu.SubMenu, { title: 'Container', key: 'container' }) }
+          <Menu.SubMenu title="Components" key="component" >
+            { renderCategory(Menu.ItemGroup, { title: 'Charts', key: 'chart' }) }
+            { renderCategory(Menu.ItemGroup, { title: 'Slicers', key: 'slicer' }) }
+            { renderCategory(Menu.ItemGroup, { title: 'Utilities', key: 'utility' }) }
+          </Menu.SubMenu>
+        </Menu>
+      </Form>
+    );
+  }
 }
