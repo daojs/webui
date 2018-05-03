@@ -16,14 +16,8 @@ export default function App() {
     <HashRouter>
       <Frame>
         <Route exact path="/" component={HomeHoC} />
-        <Route
-          path="/registry/:componentName*"
-          component={RegistryStudio}
-        />
-        <Route
-          path="/detail/:componentName*"
-          component={ComponentDetail}
-        />
+        <Route path="/registry/:componentName*" component={RegistryStudio} />
+        <Route path="/detail/:componentName*" component={ComponentDetail} />
       </Frame>
     </HashRouter>
   );
