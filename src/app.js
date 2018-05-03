@@ -3,6 +3,7 @@ import { HashRouter, Route } from 'react-router-dom';
 import ComponentDetail from './component/componentDetailHoC';
 import RegistryStudio from './component/registryStudio';
 import Home from './component/home';
+import Frame from './component/frame';
 
 function HomeHoC() {
   return (
@@ -13,30 +14,17 @@ function HomeHoC() {
 export default function App() {
   return (
     <HashRouter>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          position: 'fixed',
-          height: '100%',
-          width: '100%',
-          overflow: 'auto',
-        }}
-      >
-        <div
-          style={{ flexBasis: 0, flexGrow: 1, width: '100%' }}
-        >
-          <Route exact path="/" component={HomeHoC} />
-          <Route
-            path="/registry/:componentName*"
-            component={RegistryStudio}
-          />
-          <Route
-            path="/detail/:componentName*"
-            component={ComponentDetail}
-          />
-        </div>
-      </div>
+      <Frame>
+        <Route exact path="/" component={HomeHoC} />
+        <Route
+          path="/registry/:componentName*"
+          component={RegistryStudio}
+        />
+        <Route
+          path="/detail/:componentName*"
+          component={ComponentDetail}
+        />
+      </Frame>
     </HashRouter>
   );
 }
